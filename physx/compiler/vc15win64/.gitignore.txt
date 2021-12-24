@@ -1,0 +1,8 @@
+*/.svn/
+.svn/
+bin/
+Bin/
+obj/
+/.vs
+.vs/
+.objs/
