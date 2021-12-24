@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug|x64">
+      <Configuration>debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="checked|x64">
+      <Configuration>checked</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release|x64">
+      <Configuration>release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ControlledScene.h" />
+    <ClInclude Include="PhysXDll.h" />
+    <ClInclude Include="PhysXManager.h" />
+    <ClInclude Include="PhysXPInvokeHelper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ControlledScene.cpp" />
+    <ClCompile Include="PhysXDll.cpp" />
+    <ClCompile Include="PhysXManager.cpp" />
+    <ClCompile Include="PhysXPInvokeHelper.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\sdk_source_bin\PhysX.vcxproj">
+      <Project>{e2694940-81a4-3039-ac44-568f1dab34b1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\sdk_source_bin\PhysXCooking.vcxproj">
+      <Project>{7bfb251a-21d1-3b4c-9733-d8b8e020c063}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\sdk_source_bin\PhysXExtensions.vcxproj">
+      <Project>{5181860f-cb12-36d8-bc01-9aa735c307d1}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{2E087B0B-BA69-479D-9948-34D478E62229}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>PhysXDll</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='checked|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='checked|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>D:\GitHub\PhysX-4.0.0\physx\bin\win.x86_64.vc141.mt\release\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='checked|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>D:\GitHub\PhysX-4.0.0\physx\bin\win.x86_64.vc141.mt\checked\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;PX_SUPPORT_PVD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>D:\GitHub\PhysX-4.0.0\physx\include;D:\GitHub\PhysX-4.0.0\physx\include\utils;D:\GitHub\PhysX-4.0.0\physx\source\common\src;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\framework\include;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\renderer\include;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\platform\include;D:\GitHub\PhysX-4.0.0\physx\test\common\Utils;D:\GitHub\PhysX-4.0.0\physx\source\common\include;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\include;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\contact;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\common;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\convex;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\distance;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\gjk;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\intersection;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\mesh;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\Ice;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\hf;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\pcm;D:\GitHub\PhysX-4.0.0\physx\samples\pxtoolkit\include;D:\GitHub\PhysX-4.0.0\physx\..\pxshared\include;D:\GitHub\PhysX-4.0.0\physx\source\foundation\include;D:\GitHub\PhysX-4.0.0\physx\include\common;D:\GitHub\PhysX-4.0.0\physx\include\geometry;D:\GitHub\PhysX-4.0.0\physx\include\geomutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FloatingPointModel>Fast</FloatingPointModel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PostBuildEvent>
+      <Command>Xcopy $(TargetPath) D:\Projects\Runneru3dClient\Libs\PhysX\   /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>D:\GitHub\PhysX-4.0.0\physx\include;D:\GitHub\PhysX-4.0.0\physx\include\utils;D:\GitHub\PhysX-4.0.0\physx\source\common\src;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\framework\include;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\renderer\include;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\platform\include;D:\GitHub\PhysX-4.0.0\physx\test\common\Utils;D:\GitHub\PhysX-4.0.0\physx\source\common\include;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\include;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\contact;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\common;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\convex;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\distance;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\gjk;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\intersection;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\mesh;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\Ice;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\hf;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\pcm;D:\GitHub\PhysX-4.0.0\physx\samples\pxtoolkit\include;D:\GitHub\PhysX-4.0.0\physx\..\pxshared\include;D:\GitHub\PhysX-4.0.0\physx\source\foundation\include;D:\GitHub\PhysX-4.0.0\physx\include\common;D:\GitHub\PhysX-4.0.0\physx\include\geometry;D:\GitHub\PhysX-4.0.0\physx\include\geomutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='checked|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;PHYSX_PROFILE_SDK;PX_CHECKED=1;PX_NVTX=0;PX_SUPPORT_PVD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>D:\GitHub\PhysX-4.0.0\physx\include;D:\GitHub\PhysX-4.0.0\physx\include\utils;D:\GitHub\PhysX-4.0.0\physx\source\common\src;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\framework\include;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\renderer\include;D:\GitHub\PhysX-4.0.0\physx\samples\sampleframework\platform\include;D:\GitHub\PhysX-4.0.0\physx\test\common\Utils;D:\GitHub\PhysX-4.0.0\physx\source\common\include;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\include;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\contact;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\common;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\convex;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\distance;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\gjk;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\intersection;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\mesh;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\Ice;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\hf;D:\GitHub\PhysX-4.0.0\physx\source\geomutils\src\pcm;D:\GitHub\PhysX-4.0.0\physx\samples\pxtoolkit\include;D:\GitHub\PhysX-4.0.0\physx\..\pxshared\include;D:\GitHub\PhysX-4.0.0\physx\source\foundation\include;D:\GitHub\PhysX-4.0.0\physx\include\common;D:\GitHub\PhysX-4.0.0\physx\include\geometry;D:\GitHub\PhysX-4.0.0\physx\include\geomutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PostBuildEvent>
+      <Command>Xcopy $(TargetPath) D:\Projects\Runneru3dClient\Libs\PhysX\   /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
