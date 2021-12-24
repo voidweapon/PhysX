@@ -15,7 +15,7 @@ Opt/
 
 */Temp/
 */TestResults/
-
+*bin/
 */.svn/
 .svn/
 bin/
@@ -59,3 +59,5 @@ Server/.DS_Store
 /Unity/Unity.ModelView.csproj
 /Unity/Unity.ThirdParty.csproj
 /CMakeFiles
+/x64
+/PhysXDll/x64
