@@ -51,3 +51,32 @@ PxActorShapeP ConvertToASP(PxOverlapHit& hitInfo)
 
 	return hit;
 }
+
+PxQuat FromToRotation(PxVec3 &a, PxVec3 &b)
+{
+	PxVec3 start = a.getNormalized();
+	PxVec3 dest = b.getNormalized();
+	PxReal cosTheta = start.dot(dest);
+	PxVec3 rotationAxis;
+	PxQuat quaternion;
+	if (cosTheta < -1 + 0.001f)
+	{
+		rotationAxis = PxVec3(0.0f, 0.0f, 1.0f).cross(start);
+		if (rotationAxis.magnitudeSquared() < 0.01f)
+		{
+			rotationAxis = PxVec3(1.0f, 0.0f, 0.0f).cross(start);
+		}
+		rotationAxis.normalize();
+		quaternion = PxQuat(PxPi, rotationAxis);
+		quaternion.normalize();
+		return quaternion;
+	}
+
+	rotationAxis = start.cross(dest);
+	PxReal s = PxSqrt((1 + cosTheta) * 2);
+	PxReal invs = 1 / s;
+	
+	quaternion = PxQuat(rotationAxis.x * invs, rotationAxis.y * invs, rotationAxis.z * invs, s * 0.5f);
+	quaternion.normalize();
+	return quaternion;
+}

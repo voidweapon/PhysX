@@ -89,13 +89,22 @@ public:
 	bool sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask);
 	int sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
 
+	bool boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHit& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
+	int boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask);
+
+	bool capsuleCast(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask);
+	int capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
+
 	bool overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer& result, int layerMask);
+	bool overlapBoxNonAlloc(PxVec3 center, PxVec3 halfExtents, PxQuat orientation, PxOverlapBuffer& result, int layerMask);
+	bool overlapCapsuleNonAlloc(PxVec3 point0, PxVec3 point1, PxReal radius, PxOverlapBuffer& result, int layerMask);
 
 private:
 	void __clearCache();
 	void __initShape(PxShape* shape, int layer, bool isTrigger);
 	bool __sweep(PxGeometry& geometry, PxTransform& pose, PxVec3 direction, PxSweepBuffer& rayHit, float maxDistance, int layerMask);
 	bool __overlap(PxGeometry& geometry, PxTransform& pose, PxOverlapBuffer& result, int layerMask);
+	void __sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit& hitInfo);
 private:
 	std::vector<PxCollision>		mListCollision;
 	std::vector<PxTrigger>			mListTrigger;

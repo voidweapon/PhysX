@@ -81,13 +81,15 @@ extern "C"
 	DllExport bool sphereCast(ControlledScene* scene, PxVec3 origin, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
 	DllExport int sphereCastNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
-	DllExport bool boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHitP& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
-	DllExport int boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
+	DllExport bool boxCast(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHitP& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
+	DllExport int boxCastNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
-	DllExport bool capsuleCast(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
-	DllExport int capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
+	DllExport bool capsuleCast(PControlledScene* scene, xVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
+	DllExport int capsuleCastNonAlloc(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
 	DllExport int overlapSphereNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, int layerMask, PxActorShapeP* result, int maxCount);
+	DllExport int OverlapBoxNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents,  PxQuat orientation, int mask, PxActorShapeP* results, int maxCount);
+	DllExport int OverlapCapsuleNonAlloc(ControlledScene* scene, PxVec3 point0, PxVec3 point1,  float radius, int mask, PxActorShapeP* results, int maxCount);
 #pragma endregion
 
 

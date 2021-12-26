@@ -399,20 +399,13 @@ int ControlledScene::raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastB
 bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask)
 {
 	PxGeometry sphere = PxSphereGeometry(radius);
-	PxTransform tm;
+	PxTransform tm(origin);
 	PxSweepBuffer rayHit;
 	bool ret = this->__sweep(sphere, tm, direction, rayHit, maxDistance, layerMask);
 	
 	if (ret)
 	{
-		auto hit = rayHit.block;
-		hitInfo.actor = hit.actor;
-		hitInfo.shape = hit.shape;
-		hitInfo.faceIndex = hit.faceIndex;
-		hitInfo.flags = hit.flags;
-		hitInfo.position = hit.position;
-		hitInfo.normal = hit.normal;
-		hitInfo.distance = hit.distance;
+		this->__sweepBufferToPxRaycastHit(rayHit, hitInfo);
 	}
 
 	return ret;
@@ -420,12 +413,68 @@ bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, 
 int ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
 {
 	PxGeometry sphere = PxSphereGeometry(radius);
-	PxTransform tm;
+	PxTransform tm(origin);
 	this->__sweep(sphere, tm, direction, hitInfo, maxDistance, layerMask);
 
 	return hitInfo.getNbAnyHits();
 }
 
+bool ControlledScene::boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHit& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask)
+{
+	PxGeometry box = PxBoxGeometry(halfExtents);
+	PxTransform tm(center, orientation);
+	PxSweepBuffer rayHit;
+	bool ret = this->__sweep(box, tm, direction, rayHit, maxDistance, layerMask);
+	
+	if (ret)
+	{
+		this->__sweepBufferToPxRaycastHit(rayHit, hitInfoOut);
+	}
+
+	return ret;
+}
+int ControlledScene::boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask)
+{
+	PxGeometry box = PxBoxGeometry(halfExtents);
+	PxTransform tm(center);
+	this->__sweep(box, tm, direction, hitInfo, maxDistance, layerMask);
+
+	return hitInfo.getNbAnyHits();
+}
+
+bool ControlledScene::capsuleCast(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask)
+{
+	PxVec3 shapeDir = point1 - point2;
+	PxReal halfHeigh = shapeDir.magnitude() - 2.0f* radius;
+	PxGeometry capsule = PxCapsuleGeometry(radius, halfHeigh);
+	PxVec3 up = PxVec3(0.0f,1.0f,0.0f);
+	PxQuat pose = FromToRotation(up, shapeDir);
+	PxTransform tm(0.5f * (point1 + point2), pose);
+
+	PxSweepBuffer rayHit;
+	bool ret = this->__sweep(capsule, tm, direction, rayHit, maxDistance, layerMask);
+	
+	if (ret)
+	{
+		this->__sweepBufferToPxRaycastHit(rayHit, hitInfoOut);
+	}
+
+	return ret;
+}
+int ControlledScene::capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
+{
+	PxVec3 shapeDir = point1 - point2;
+	PxReal halfHeigh = shapeDir.magnitude() - 2.0f* radius;
+	PxGeometry capsule = PxCapsuleGeometry(radius, halfHeigh);
+	PxVec3 up = PxVec3(0.0f,1.0f,0.0f);
+	PxQuat pose = FromToRotation(up, shapeDir);
+	PxTransform tm(0.5f * (point1 + point2), pose);
+
+	PxSweepBuffer rayHit;
+	this->__sweep(capsule, tm, direction, hitInfo, maxDistance, layerMask);
+
+	return hitInfo.getNbAnyHits();
+}
 
 bool ControlledScene::overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer& result, int layerMask)
 {
@@ -433,6 +482,23 @@ bool ControlledScene::overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer
 	PxTransform tm;
 	return this->__overlap(sphere, tm, result, layerMask);
 }
+bool ControlledScene::overlapBoxNonAlloc(PxVec3 center, PxVec3 halfExtents, PxQuat orientation, PxOverlapBuffer& result, int layerMask)
+{
+	PxGeometry box = PxBoxGeometry(halfExtents);
+	PxTransform tm(center, orientation);
+	return this->__overlap(box, tm, result, layerMask);
+}
+bool ControlledScene::overlapCapsuleNonAlloc(PxVec3 point0, PxVec3 point1, PxReal radius, PxOverlapBuffer& result, int layerMask)
+{
+	PxVec3 shapeDir = point0 - point1;
+	PxReal halfHeigh = shapeDir.magnitude() - 2.0f* radius;
+	PxGeometry capsule = PxCapsuleGeometry(radius, halfHeigh);
+	PxVec3 up = PxVec3(0.0f,1.0f,0.0f);
+	PxQuat pose = FromToRotation(up, shapeDir);
+	PxTransform tm(0.5f * (point0 + point1), pose);
+	return this->__overlap(capsule, tm, result, layerMask);
+}
+
 
 bool ControlledScene::__sweep(PxGeometry& geometry, PxTransform& pose, PxVec3 direction, PxSweepBuffer& rayHit, float maxDistance, int layerMask)
 {
@@ -456,6 +522,19 @@ bool ControlledScene::__overlap(PxGeometry& geometry, PxTransform& pose, PxOverl
 
 	return mScene->overlap(geometry, pose, result, Queryfilter, this);
 }
+
+void ControlledScene::__sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit& hitInfo)
+{
+	auto hit = rayHit.block;
+	hitInfo.actor = hit.actor;
+	hitInfo.shape = hit.shape;
+	hitInfo.faceIndex = hit.faceIndex;
+	hitInfo.flags = hit.flags;
+	hitInfo.position = hit.position;
+	hitInfo.normal = hit.normal;
+	hitInfo.distance = hit.distance;
+}
+
 
 PxQueryHitType::Enum ControlledScene::preFilter(
 	const PxFilterData& filterData, const PxShape* shape, const PxRigidActor* actor, PxHitFlags& queryFlags)

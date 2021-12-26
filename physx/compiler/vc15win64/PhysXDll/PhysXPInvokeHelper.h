@@ -72,4 +72,5 @@ PxTransform ConvertToPx(PxTransformP &pTm);
 PxRaycastHitP ConvertToHitP(PxRaycastHit &hitInfo);
 PxRaycastHitP ConvertToHitP(PxSweepHit &hitInfo);
 PxActorShapeP ConvertToASP(PxOverlapHit& hitInfo);
+PxQuat FromToRotation(PxVec3 &a, PxVec3 &b);
 #endif

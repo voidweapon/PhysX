@@ -446,6 +446,66 @@ extern "C"
 		return count;
 	}
 
+	bool boxCast(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHitP& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask)
+	{
+		if (!_manager) return false;
+
+		PxRaycastHit hitInfo;
+		bool ret = scene->boxCast(center, halfExtents, direction, hitInfo, orientation, maxDistance, layerMask);
+
+		hitInfoOut = ConvertToHitP(hitInfo);
+
+		return ret;
+	}
+	int boxCastNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
+	{
+		if (!_manager) return 0;
+		if (maxCount > 65535)
+		{
+			maxCount = 65535;
+		}
+		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
+		int count = scene->boxCastNonAlloc(center, halfExtents, direction, orientation, rayHit, maxDistance, layerMask);
+
+		for (size_t i = 0; i < count; i++)
+		{
+			PxSweepHit hitInfo = rayHit.getAnyHit(i);
+			hitInfoOut[i] = ConvertToHitP(hitInfo);
+		}
+
+		return count;
+	}
+
+	bool capsuleCast(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask)
+	{
+		if (!_manager) return false;
+				PxRaycastHit hitInfo;
+
+		bool ret = scene->capsuleCast(point1, point2, radius, direction, hitInfo, maxDistance, layerMask);
+
+		hitInfoOut = ConvertToHitP(hitInfo);
+
+		return ret;
+	}
+	int capsuleCastNonAlloc(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
+	{
+		if (!_manager) return 0;
+		if (maxCount > 65535)
+		{
+			maxCount = 65535;
+		}
+
+		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
+		int count = scene->capsuleCastNonAlloc(point1, point2, radius, direction, rayHit, maxDistance, layerMask);
+
+		for (size_t i = 0; i < count; i++)
+		{
+			PxSweepHit hitInfo = rayHit.getAnyHit(i);
+			hitInfoOut[i] = ConvertToHitP(hitInfo);
+		}
+		return count;
+	}
+
 	int overlapSphereNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, int layerMask, PxActorShapeP* result, int maxCount)
 	{
 		if (!_manager) return 0;
@@ -467,6 +527,45 @@ extern "C"
 		return count;
 	}
 
+	int OverlapBoxNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents,  PxQuat orientation, int mask, PxActorShapeP* results, int maxCount)
+	{
+		if (!_manager) return 0;
 
+		if (maxCount > 65535)
+		{
+			maxCount = 65535;
+		}
+
+		PxOverlapBuffer hitResult(overlapCache, maxCount);
+		int count = scene->overlapBoxNonAlloc(center, halfExtents, orientation, hitResult, mask);
+
+		for (size_t i = 0; i < count; i++)
+		{
+			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
+			results[i] = ConvertToASP(hitInfo);
+		}
+
+		return count;
+	}
+	int OverlapCapsuleNonAlloc(ControlledScene* scene, PxVec3 point0, PxVec3 point1,  float radius, int mask, PxActorShapeP* results, int maxCount)
+	{
+		if (!_manager) return 0;
+
+		if (maxCount > 65535)
+		{
+			maxCount = 65535;
+		}
+
+		PxOverlapBuffer hitResult(overlapCache, maxCount);
+		int count = scene->overlapCapsuleNonAlloc(point0, point1, radius, hitResult, mask);
+
+		for (size_t i = 0; i < count; i++)
+		{
+			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
+			results[i] = ConvertToASP(hitInfo);
+		}
+
+		return count;
+	}
 }
 
