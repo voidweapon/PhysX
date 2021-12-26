@@ -88,8 +88,8 @@ extern "C"
 	DllExport int capsuleCastNonAlloc(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
 	DllExport int overlapSphereNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, int layerMask, PxActorShapeP* result, int maxCount);
-	DllExport int OverlapBoxNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents,  PxQuat orientation, int mask, PxActorShapeP* results, int maxCount);
-	DllExport int OverlapCapsuleNonAlloc(ControlledScene* scene, PxVec3 point0, PxVec3 point1,  float radius, int mask, PxActorShapeP* results, int maxCount);
+	DllExport int overlapBoxNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents,  PxQuat orientation, int mask, PxActorShapeP* results, int maxCount);
+	DllExport int overlapCapsuleNonAlloc(ControlledScene* scene, PxVec3 point0, PxVec3 point1,  float radius, int mask, PxActorShapeP* results, int maxCount);
 #pragma endregion
 
 
