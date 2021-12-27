@@ -127,7 +127,7 @@ namespace ET
         private static extern int boxCastNonAlloc(IntPtr scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, [Out] PxRaycastHitP[] hitInfoOut, int maxCount);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-	    private static extern bool capsuleCast(IntPtr scene, xVec3 point1, PxVec3 point2, float radius, PxVec3 direction, ref PxRaycastHitP hitInfoOut, float maxDistance, int layerMask);
+	    private static extern bool capsuleCast(IntPtr scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, ref PxRaycastHitP hitInfoOut, float maxDistance, int layerMask);
         
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int capsuleCastNonAlloc(IntPtr scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, [Out] PxRaycastHitP[] hitInfoOut, int maxCount);
@@ -358,7 +358,7 @@ namespace ET
         }
 
 
-	    public static bool BoxCast(IntPtr scene, Vector3 center, Vector3 halfExtents, Vector3 direction, ref PxRaycastHitP hitInfoOut, Quaternion orientation, float maxDistance, int layerMask)
+	    public static bool BoxCast(IntPtr scene, Vector3 center, Vector3 halfExtents, Vector3 direction, ref PxRaycastHitP hitInfo, Quaternion orientation, float maxDistance, int layerMask)
         {
             hitInfo = default;
             return boxCast(scene, center.ToPx(), halfExtents.ToPx(), direction.ToPx(), ref hitInfo, orientation.ToPx(), maxDistance, layerMask);
@@ -368,21 +368,21 @@ namespace ET
         public static int BoxCastNonAlloc(IntPtr scene, Vector3 center, Vector3 halfExtents, Vector3 direction, PxRaycastHitP[] results, Quaternion orientation, float maxDistance, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = boxCastNonAlloc(scene, center.ToPx(), halfExtents, direction.ToPx(), maxDistance, orientation.ToPx(), layerMask, results, maxCount);
+            int hitCount = boxCastNonAlloc(scene, center.ToPx(), halfExtents.ToPx(), direction.ToPx(), orientation.ToPx(), maxDistance, layerMask, results, maxCount);
             return hitCount;
         }
 
-	    public static bool CapsuleCast(IntPtr scene, Vector3 point1, Vector3 point2, float radius, Vector3 direction, ref PxRaycastHitP hitInfoOut, float maxDistance, int layerMask)
+	    public static bool CapsuleCast(IntPtr scene, Vector3 point1, Vector3 point2, float radius, Vector3 direction, ref PxRaycastHitP hitInfo, float maxDistance, int layerMask)
         {
             hitInfo = default;
-            return capsuleCast(scene, point1.ToPx(), point1.ToPx(), radius, direction.ToPx(), ref hitInfo, orientation.ToPx(), maxDistance, layerMask);
+            return capsuleCast(scene, point1.ToPx(), point1.ToPx(), radius, direction.ToPx(), ref hitInfo, maxDistance, layerMask);
         }
         
 
         public static int CapsuleCastNonAlloc(IntPtr scene, Vector3 point1, Vector3 point2, float radius, Vector3 direction, PxRaycastHitP[] results, float maxDistance, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = capsuleCastNonAlloc(scene, point1.ToPx(), point1.ToPx(), radius, direction, maxDistance, layerMask, results, maxCount);
+            int hitCount = capsuleCastNonAlloc(scene, point1.ToPx(), point1.ToPx(), radius, direction.ToPx(), maxDistance, layerMask, results, maxCount);
             return hitCount;
         }
 
@@ -395,14 +395,14 @@ namespace ET
             return hitCount;
         }
 
-        public static int OverlapBoxNonAlloc(IntPtr scene, Vector3 center, Vector3 halfExtents, PxActorShapeP[] results, Quaternion orientation, int mask)
+        public static int OverlapBoxNonAlloc(IntPtr scene, Vector3 center, Vector3 halfExtents, PxActorShapeP[] results, Quaternion orientation, int layerMask)
         {
             int maxCount = results.Length;
             int hitCount = overlapBoxNonAlloc(scene, center.ToPx(), halfExtents.ToPx(), orientation.ToPx(), layerMask, results, maxCount);
             return hitCount;
         }
 	    
-        public static int OverlapCapsuleNonAlloc(IntPtr scene, Vector3 point0, Vector3 point1,  float radius, PxActorShapeP[] results, int mask)
+        public static int OverlapCapsuleNonAlloc(IntPtr scene, Vector3 point0, Vector3 point1,  float radius, PxActorShapeP[] results, int layerMask)
         {
             int maxCount = results.Length;
             int hitCount = overlapCapsuleNonAlloc(scene, point0.ToPx(), point1.ToPx(), radius, layerMask, results, maxCount);
