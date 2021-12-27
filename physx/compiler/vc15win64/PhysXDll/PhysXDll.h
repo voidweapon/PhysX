@@ -84,7 +84,7 @@ extern "C"
 	DllExport bool boxCast(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHitP& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
 	DllExport int boxCastNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
-	DllExport bool capsuleCast(PControlledScene* scene, xVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
+	DllExport bool capsuleCast(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
 	DllExport int capsuleCastNonAlloc(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
 	DllExport int overlapSphereNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, int layerMask, PxActorShapeP* result, int maxCount);
