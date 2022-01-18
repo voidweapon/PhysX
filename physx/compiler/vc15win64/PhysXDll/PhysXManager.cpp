@@ -130,8 +130,6 @@ void PhysXManager::onShutdown()
 	mCooking->release();
 	mCooking = NULL;
 
-	PxCloseExtensions();
-
 	mPhysics->release();
 	mPhysics = NULL;
 
