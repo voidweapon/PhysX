@@ -564,7 +564,7 @@ namespace ET
         public IntPtr triggerActor;
         public IntPtr otherActor;
         public int status;
-    };
+    }
 
 
     [StructLayout(LayoutKind.Sequential)]
