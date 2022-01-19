@@ -516,8 +516,9 @@ extern "C"
 		}
 
 		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		int count = scene->overlapSphere(origin, radius, hitResult, layerMask);
+		scene->overlapSphere(origin, radius, hitResult, layerMask);
 
+		size_t count = hitResult.nbTouches;
 		for (size_t i = 0; i < count; i++)
 		{
 			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
@@ -537,8 +538,9 @@ extern "C"
 		}
 
 		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		int count = scene->overlapBoxNonAlloc(center, halfExtents, orientation, hitResult, mask);
+		scene->overlapBoxNonAlloc(center, halfExtents, orientation, hitResult, mask);
 
+		size_t count = hitResult.nbTouches;
 		for (size_t i = 0; i < count; i++)
 		{
 			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
@@ -557,8 +559,9 @@ extern "C"
 		}
 
 		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		int count = scene->overlapCapsuleNonAlloc(point0, point1, radius, hitResult, mask);
+		scene->overlapCapsuleNonAlloc(point0, point1, radius, hitResult, mask);
 
+		size_t count = hitResult.nbTouches;
 		for (size_t i = 0; i < count; i++)
 		{
 			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
