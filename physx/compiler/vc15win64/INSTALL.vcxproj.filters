@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\CMakeFiles\7f5300c1e772081741540e994aaf9957\INSTALL_force.rule">
+    <CustomBuild Include="D:\GitHub\PhysX\physx\compiler\vc15win64\CMakeFiles\783aa0d8c39c61899012faf0c57a59f6\INSTALL_force.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{A1FE9B37-E102-3939-9493-B2261924BC59}</UniqueIdentifier>
+      <UniqueIdentifier>{CE49ABBC-B553-306D-9ACD-4FF70D548D27}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

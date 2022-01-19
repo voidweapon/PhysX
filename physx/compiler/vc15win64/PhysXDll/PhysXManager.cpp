@@ -130,6 +130,9 @@ void PhysXManager::onShutdown()
 	mCooking->release();
 	mCooking = NULL;
 
+	mMaterial->release();
+	mMaterial = NULL;
+
 	mPhysics->release();
 	mPhysics = NULL;
 
@@ -253,9 +256,10 @@ ControlledScene* PhysXManager::createScene()
 		return false;
 	}
 
-	auto planMat = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	PxRigidStatic* groundPlane = PxCreatePlane(*mPhysics, PxPlane(0, 1, 0, 0), *planMat);
-	newScene->addActor(*groundPlane);
+	//auto planMat = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+	//PxRigidStatic* groundPlane = PxCreatePlane(*mPhysics, PxPlane(0, 1, 0, 0), *planMat);
+	//newScene->addActor(*groundPlane);
+
 	newScene->setBounceThresholdVelocity(mBounceThreshold);
 	newScene->setFrictionType(mDefaultFrictionType);
 

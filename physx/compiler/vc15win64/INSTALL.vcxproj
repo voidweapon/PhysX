@@ -19,7 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{C01D75EB-E922-37E9-BFF5-FE88311C78D4}</ProjectGuid>
+    <ProjectGuid>{33755BCB-99F0-349C-B570-5D32A174725C}</ProjectGuid>
     <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
     <Platform>x64</Platform>
@@ -118,7 +118,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\CMakeFiles\7f5300c1e772081741540e994aaf9957\INSTALL_force.rule">
+    <CustomBuild Include="D:\GitHub\PhysX\physx\compiler\vc15win64\CMakeFiles\783aa0d8c39c61899012faf0c57a59f6\INSTALL_force.rule">
       <Message Condition="'$(Configuration)|$(Platform)'=='debug|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='debug|x64'">setlocal
 cd .
@@ -130,7 +130,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='debug|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='debug|x64'">D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='debug|x64'">D:\GitHub\PhysX\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='debug|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='checked|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='checked|x64'">setlocal
@@ -143,7 +143,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='checked|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='checked|x64'">D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='checked|x64'">D:\GitHub\PhysX\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='checked|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='profile|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='profile|x64'">setlocal
@@ -156,7 +156,7 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='profile|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='profile|x64'">D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='profile|x64'">D:\GitHub\PhysX\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='profile|x64'">false</LinkObjects>
       <Message Condition="'$(Configuration)|$(Platform)'=='release|x64'"> </Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='release|x64'">setlocal
@@ -169,19 +169,19 @@ exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='release|x64'">%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='release|x64'">D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='release|x64'">D:\GitHub\PhysX\physx\compiler\vc15win64\CMakeFiles\INSTALL_force</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='release|x64'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\ZERO_CHECK.vcxproj">
-      <Project>{BC1E9932-1BB7-3762-B6B3-1BF7E98A029A}</Project>
+    <ProjectReference Include="D:\GitHub\PhysX\physx\compiler\vc15win64\ZERO_CHECK.vcxproj">
+      <Project>{C58777B4-C8EA-38A1-BF63-2949E132B3B4}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </ProjectReference>
-    <ProjectReference Include="D:\GitHub\PhysX-4.0.0\physx\compiler\vc15win64\ALL_BUILD.vcxproj">
-      <Project>{6F70F9E4-0317-3D53-908C-F8262DB428FD}</Project>
+    <ProjectReference Include="D:\GitHub\PhysX\physx\compiler\vc15win64\ALL_BUILD.vcxproj">
+      <Project>{4A7DA3C8-7AC9-3C34-B216-BD25E8688866}</Project>
       <Name>ALL_BUILD</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
