@@ -20,7 +20,7 @@ class ControlledScene:
 	public PxQueryFilterCallback
 {
 public:
-	ControlledScene(PxPhysics* physics, PxScene* scene);
+	ControlledScene(PxPhysics* physics, PxScene* scene, PxMaterial* defaultMaterial);
 	~ControlledScene();
 	PxReal*									mSleepThreshold;
 	PxReal*									mDefaultContactOffset;
@@ -110,6 +110,7 @@ private:
 	std::vector<PxTrigger>			mListTrigger;
 	PxPhysics*						mPhysics;
 	PxScene*						mScene;
+	PxMaterial*						mDefaultMaterial;
 };
 
 #endif

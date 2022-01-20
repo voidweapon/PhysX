@@ -1,8 +1,9 @@
 #include "ControlledScene.h"
 
-ControlledScene::ControlledScene(PxPhysics* physics, PxScene* scene):
+ControlledScene::ControlledScene(PxPhysics* physics, PxScene* scene, PxMaterial* defaultMaterial):
 	mPhysics(physics),
-	mScene(scene)
+	mScene(scene),
+	mDefaultMaterial(defaultMaterial)
 {
 	mScene->setSimulationEventCallback(this);
 }
@@ -11,6 +12,7 @@ ControlledScene::~ControlledScene()
 {
 	mPhysics = nullptr;
 	mScene = nullptr;
+	mDefaultMaterial = nullptr;
 }
 
 #pragma region Simulation Event
@@ -177,7 +179,7 @@ PxRigidActor* ControlledScene::changeRigidbodyStatic(PxRigidActor* actor, bool i
 
 PxShape* ControlledScene::addBoxCollider(PxRigidActor* actor, int layer, PxVec3 center, PxVec3 size, bool isTrigger)
 {
-	PxMaterial* material = mPhysics->createMaterial(0, 0, 0);
+	PxMaterial* material = mDefaultMaterial;
 	size *= 0.5f;
 	PxShape* shape = mPhysics->createShape(PxBoxGeometry(size.x, size.y, size.z), *material, true);
 
@@ -194,7 +196,7 @@ PxShape* ControlledScene::addBoxCollider(PxRigidActor* actor, int layer, PxVec3 
 
 PxShape* ControlledScene::addCapsuleCollider(PxRigidActor* actor, int layer, PxVec3 center, PxReal radius, PxReal heigh, int direction, bool isTrigger)
 {
-	PxMaterial* material = mPhysics->createMaterial(0, 0, 0);
+	PxMaterial* material = mDefaultMaterial;
 	heigh = (heigh - radius * 2.0f) * 0.5f;
 	PxShape* shape =  PxRigidActorExt::createExclusiveShape(*actor, PxCapsuleGeometry(radius, heigh), *material);
 
@@ -225,7 +227,7 @@ PxShape* ControlledScene::addCapsuleCollider(PxRigidActor* actor, int layer, PxV
 
 PxShape* ControlledScene::addSphereCollider(PxRigidActor* actor, int layer, PxVec3 center, PxReal radius, bool isTrigger)
 {
-	PxMaterial* material = mPhysics->createMaterial(0, 0, 0);
+	PxMaterial* material = mDefaultMaterial;
 	PxShape* shape = PxRigidActorExt::createExclusiveShape(*actor, PxSphereGeometry(radius), *material);
 
 	PxTransform relativePose(center);
@@ -520,6 +522,10 @@ bool ControlledScene::__sweep(PxGeometry& geometry, PxTransform& pose, PxVec3 di
 	filterData.word0 = layerMask;
 	filterData.word1 = castAll ? 1 : 0;
 	PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER;
+	if (!castAll)
+	{
+		flags |= PxQueryFlag::eANY_HIT;
+	}
 	PxQueryFilterData Queryfilter(filterData, flags);
 
 	return mScene->sweep(geometry, pose, direction, maxDistance, rayHit, hitFlags, Queryfilter, this);
@@ -531,9 +537,14 @@ bool ControlledScene::__overlap(PxGeometry& geometry, PxTransform& pose, PxOverl
 
 	PxFilterData filterData;
 	filterData.word0 = layerMask;
-	filterData.word1 = castAll ? 1 : 0;
+	//overlap can't ues PxQueryHitType::eBLOCK
+	//filterData.word1 = castAll ? 1 : 0;
 	//PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER;
-	PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::eNO_BLOCK;
+	PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER;
+	if (!castAll)
+	{
+		flags |= PxQueryFlag::eANY_HIT;
+	}
 	PxQueryFilterData Queryfilter(filterData, flags);
 
 	return mScene->overlap(geometry, pose, result, Queryfilter, this);

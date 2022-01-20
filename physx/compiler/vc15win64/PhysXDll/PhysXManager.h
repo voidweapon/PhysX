@@ -71,6 +71,10 @@ public://impelement PxSimulationFilterCallback
 
 	bool			statusChange(PxU32& pairID, PxPairFlags& pairFlags, PxFilterFlags& filterFlags);
 
+
+	PxMaterial* getDefaultMaterial() { return mMaterial; }
+
+
 protected:
 	void togglePvdConnection();
 	void createPvdConnection();

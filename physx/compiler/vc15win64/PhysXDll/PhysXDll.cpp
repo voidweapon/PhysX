@@ -6,7 +6,6 @@ extern "C"
 	PhysXManager* _manager = NULL;
 
 	PxTransformP DefaultTm;
-	float _cache[65535];
 
 	PxRaycastHit raycastCache[65535];
 	PxSweepHit sweepCache[65535];

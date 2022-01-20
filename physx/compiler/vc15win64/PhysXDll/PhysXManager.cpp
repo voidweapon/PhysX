@@ -103,7 +103,7 @@ bool PhysXManager::onInit(bool* collisionTable)
 	//params.buildGPUData = true; //Enable GRB data being produced in cooking.
 	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, params);
 
-	mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.1f);
+	mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0);
 	int index = 0;
 	for (size_t i = 0; i < 32; i++)
 	{
@@ -228,7 +228,7 @@ void PhysXManager::createPvdConnection()
 	if (mTransport == NULL)
 		return;
 
-	mPvdFlags = physx::PxPvdInstrumentationFlag::eDEBUG;
+	mPvdFlags = physx::PxPvdInstrumentationFlag::eDEBUG /*| PxPvdInstrumentationFlag::ePROFILE*/;
 	mPvd = physx::PxCreatePvd(*mFoundation);
 	mPvd->connect(*mTransport, mPvdFlags);
 #endif
@@ -256,14 +256,10 @@ ControlledScene* PhysXManager::createScene()
 		return false;
 	}
 
-	//auto planMat = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-	//PxRigidStatic* groundPlane = PxCreatePlane(*mPhysics, PxPlane(0, 1, 0, 0), *planMat);
-	//newScene->addActor(*groundPlane);
-
 	newScene->setBounceThresholdVelocity(mBounceThreshold);
 	newScene->setFrictionType(mDefaultFrictionType);
 
-	ControlledScene* sceneController = new ControlledScene(mPhysics, newScene);
+	ControlledScene* sceneController = new ControlledScene(mPhysics, newScene, mMaterial);
 	sceneController->mSleepThreshold = &(this->mSleepThreshold);
 	sceneController->mDefaultContactOffset = &(this->mDefaultContactOffset);
 	sceneController->mDefaultSolverIterations = &(this->mDefaultSolverIterations);
