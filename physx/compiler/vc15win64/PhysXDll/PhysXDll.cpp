@@ -334,6 +334,27 @@ extern "C"
 			rigidbody->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_SPECULATIVE_CCD, true);
 		}
 	}
+	void setLayer(PxRigidActor* actor, int layer)
+	{
+		if (!_manager) return;
+		PxRigidDynamic* rigidbody = (PxRigidDynamic*)(actor);
+		if (!rigidbody) return;
+
+		PxU32 count = rigidbody->getNbShapes();
+		for (size_t i = 0; i < count; i++)
+		{
+			PxShape* shape;
+			rigidbody->getShapes(&shape, 1, i);
+			PxFilterData simulateFilter;
+			simulateFilter.word0 = layer;
+			PxFilterData queryFilter;
+			queryFilter.word0 = 1 << layer;
+
+			shape->setQueryFilterData(queryFilter);
+			shape->setSimulationFilterData(simulateFilter);
+		}
+	}
+
 
 	void addForce(void* actor, PxVec3 force, int mode)
 	{

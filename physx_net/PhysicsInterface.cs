@@ -5,9 +5,13 @@ using UnityEngine;
 
 namespace ET
 {
-    public static class PhysicsInterface
+    public static class PhysX
     {
+#if UNITY_IPHONE && !UNITY_EDITOR
+        private const string PhysXDLL = "__Internal";
+#else
         private const string PhysXDLL = "PhysXDll";
+#endif
 
         //============================================================================================================================
         #region Physics
@@ -63,10 +67,16 @@ namespace ET
         //============================================================================================================================
         #region Actor Property
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void setActorPosition(IntPtr collider, PxVec3 pos);
+        private static extern void setActorPosition(IntPtr actor, PxVec3 pos);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void setActorQuaternion(IntPtr collider, PxQuat qua);
+        private static extern void setActorQuaternion(IntPtr actor, PxQuat qua);
+        
+        [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void setUseGravity(IntPtr actor, bool useGravity);
+        
+        [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void setIsKinematic(IntPtr actor, bool isKinematic);
         #endregion
 
         //============================================================================================================================
@@ -79,7 +89,7 @@ namespace ET
         private static extern IntPtr addBoxCollider(IntPtr scene, IntPtr actor, int layer, PxVec3 center, PxVec3 size, bool isTrigger);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr addCapsuleCollider(IntPtr scene, IntPtr actor, int layer, float radius, float height, int direction, bool isTrigger);
+        private static extern IntPtr addCapsuleCollider(IntPtr scene, IntPtr actor, int layer, PxVec3 center, float radius, float height, int direction, bool isTrigger);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr addSphereCollider(IntPtr scene, IntPtr actor, int layer, PxVec3 center, float radius, bool isTrigger);
@@ -121,13 +131,13 @@ namespace ET
         private static extern int sphereCastNonAlloc(IntPtr scene, PxVec3 origin, float radius, PxVec3 direction, float maxDistance, int layerMask, [Out] PxRaycastHitP[] hitInfoOut, int maxCount);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-	    private static extern bool boxCast(IntPtr scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, ref PxRaycastHitP hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
+        private static extern bool boxCast(IntPtr scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, ref PxRaycastHitP hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
         
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int boxCastNonAlloc(IntPtr scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, [Out] PxRaycastHitP[] hitInfoOut, int maxCount);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-	    private static extern bool capsuleCast(IntPtr scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, ref PxRaycastHitP hitInfoOut, float maxDistance, int layerMask);
+        private static extern bool capsuleCast(IntPtr scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, ref PxRaycastHitP hitInfoOut, float maxDistance, int layerMask);
         
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int capsuleCastNonAlloc(IntPtr scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, [Out] PxRaycastHitP[] hitInfoOut, int maxCount);
@@ -136,10 +146,10 @@ namespace ET
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int overlapSphereNonAlloc(IntPtr scene, PxVec3 origin, float radius, int layerMask, [Out] PxActorShapeP[] result, int maxCount);
-    	
+        
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int overlapBoxNonAlloc(IntPtr scene, PxVec3 center, PxVec3 halfExtents,  PxQuat orientation, int mask, [Out] PxActorShapeP[] results, int maxCount);
-	    
+        
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern int overlapCapsuleNonAlloc(IntPtr scene, PxVec3 point0, PxVec3 point1,  float radius, int mask, [Out] PxActorShapeP[] results, int maxCount);
 
@@ -157,6 +167,7 @@ namespace ET
         /// <summary>
         /// 初始化物理引擎
         /// </summary>
+        /// <param name="coliisionTable">32x32的物理Layer碰撞矩阵</param>
         /// <returns></returns>
         public static bool InitPhysics(bool[,] coliisionTable)
         {
@@ -208,23 +219,25 @@ namespace ET
         }
         #endregion
 
+        #region PhysicsScene
+
         /// <summary>
         /// 创建物理世界
         /// </summary>
         /// <param name="id">物理世界Id 需要唯一</param>
         /// <returns></returns>
-        public static IntPtr CreatePhysicsScene()
+        public static long CreatePhysicsScene()
         {
-            return createPhysicsScene();
+            return createPhysicsScene().ToInt64();
         }
 
         /// <summary>
         /// 销毁物理世界
         /// </summary>
-        /// <param name="id">物理世界Id</param>
-        public static void DestroyPhysicsScene(IntPtr scene)
+        /// <param name="scene">物理世界Id</param>
+        public static void DestroyPhysicsScene(long scene)
         {
-            destroyPhysicsScene(scene);
+            destroyPhysicsScene((IntPtr)scene);
         }
 
 
@@ -232,14 +245,24 @@ namespace ET
         /// <summary>
         /// 调用物理世界的Update
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="scene">物理世界Id</param>
         /// <param name="dt"></param>
-        public static void StepPhysicsScene(IntPtr scene, float dt)
+        public static void StepPhysicsScene(long scene, float dt)
         {
-            stepPhysicsScene(scene, dt);
+            stepPhysicsScene((IntPtr)scene, dt);
         }
 
-        public static IntPtr CreateRigidbody(IntPtr scene, Vector3 pos, Quaternion qua, bool isStatic = false)
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scene">物理世界Id</param>
+        /// <param name="pos"></param>
+        /// <param name="qua"></param>
+        /// <param name="isStatic"></param>
+        /// <returns>物理刚体Id</returns>
+        public static long CreateRigidbody(long scene, Vector3 pos, Quaternion qua, bool isStatic = false)
         {
             PxTransformP pTm = new PxTransformP()
             {
@@ -247,24 +270,31 @@ namespace ET
                 p = pos.ToPx(),
             };
 
-            return createRigidbody(scene, pTm, isStatic);
+            return createRigidbody((IntPtr)scene, pTm, isStatic).ToInt64();
         }
 
         /// <summary>
         /// 删除actorr
         ///一起移除所有Shape
         /// </summary>
-        /// <param name="scene"></param>
-        /// <param name="actor"></param>
-        public static void DestroyRigidActor(IntPtr scene, IntPtr actor)
+        /// <param name="scene">物理世界Id</param>
+        /// <param name="actor">物理刚体Id</param>
+        public static void DestroyRigidActor(long scene, long actor)
         {
-            destroyRigidActor(scene, actor);
+            destroyRigidActor((IntPtr)scene, (IntPtr)actor);
         }
 
-
-        public static IntPtr ChangeRigidbodyStatic(IntPtr scene, IntPtr actor, bool isStatic)
+        /// <summary>
+        /// 改变刚体性质
+        /// PxRigidStatic 和 PxRigidDynamic 相互转换
+        /// </summary>
+        /// <param name="scene">物理世界Id</param>
+        /// <param name="actor">物理刚体Id</param>
+        /// <param name="isStatic"></param>
+        /// <returns></returns>
+        public static long ChangeRigidbodyStatic(long scene, long actor, bool isStatic)
         {
-            return changeRigidbodyStatic(scene, actor, isStatic);
+            return changeRigidbodyStatic((IntPtr)scene, (IntPtr)actor, isStatic).ToInt64();
         }
 
 
@@ -274,26 +304,59 @@ namespace ET
         /// </summary>
         /// <param name="actor"></param>
         /// <param name="shape"></param>
-        public static void RemoveCollider(IntPtr actor, IntPtr shape)
+        public static void RemoveCollider(long actor, long shape)
         {
-            removeCollider(actor, shape);
+            removeCollider((IntPtr)actor, (IntPtr)shape);
         }
 
-        public static IntPtr AddBoxCollider(IntPtr scene, IntPtr actor, int layer, Vector3 center, Vector3 size, bool isTrigger = false)
+        /// <summary>
+        /// 添加长方体碰撞体到刚体
+        /// </summary>
+        /// <param name="scene">物理世界Id</param>
+        /// <param name="actor">物理刚体Id</param>
+        /// <param name="layer"></param>
+        /// <param name="center"></param>
+        /// <param name="size"></param>
+        /// <param name="isTrigger"></param>
+        /// <returns>Shape的Id</returns>
+        public static long AddBoxCollider(long scene, long actor, int layer, Vector3 center, Vector3 size, bool isTrigger = false)
         {
-            return addBoxCollider(scene, actor, layer, center.ToPx(), size.ToPx(), isTrigger);
+            return addBoxCollider((IntPtr)scene, (IntPtr)actor, layer, center.ToPx(), size.ToPx(), isTrigger).ToInt64();
         }
 
-        public static IntPtr AddCapsuleCollider(IntPtr scene, IntPtr actor, int layer, float radius, float height, int direction, bool isTrigger = false)
+        /// <summary>
+        /// 添加胶囊体碰撞体到刚体
+        /// </summary>
+        /// <param name="scene">物理世界Id</param>
+        /// <param name="actor">物理刚体Id</param>
+        /// <param name="layer"></param>
+        /// <param name="radius"></param>
+        /// <param name="height"></param>
+        /// <param name="direction"></param>
+        /// <param name="isTrigger"></param>
+        /// <returns>Shape的Id</returns>
+        public static long AddCapsuleCollider(long scene, long actor, int layer, Vector3 center, float radius, float height, int direction, bool isTrigger = false)
         {
-            return addCapsuleCollider(scene, actor, layer, radius, height, direction, isTrigger);
+            return addCapsuleCollider((IntPtr) scene, (IntPtr) actor, layer, center.ToPx(), radius, height, direction, isTrigger).ToInt64();
         } 
 
-        public static IntPtr AddSphereCollider(IntPtr scene, IntPtr actor, int layer, Vector3 center, float radius, bool isTrigger = false)
+        /// <summary>
+        /// 添加球型碰撞体到刚体
+        /// </summary>
+        /// <param name="scene">物理世界Id</param>
+        /// <param name="actor">物理刚体Id</param>
+        /// <param name="layer"></param>
+        /// <param name="center"></param>
+        /// <param name="radius"></param>
+        /// <param name="isTrigger"></param>
+        /// <returns>Shape的Id</returns>
+        public static long AddSphereCollider(long scene, long actor, int layer, Vector3 center, float radius, bool isTrigger = false)
         {
-            return addSphereCollider(scene, actor, layer, center.ToPx(), radius, isTrigger);
+            return addSphereCollider((IntPtr)scene, (IntPtr)actor, layer, center.ToPx(), radius, isTrigger).ToInt64();
         }
         #endregion
+
+        #region Actor Property
 
         /// <summary>
         /// 设置世界坐标
@@ -317,135 +380,174 @@ namespace ET
             setActorQuaternion(intPtr, qua.ToPx());
         }
 
-        public static void AddForce(IntPtr actor, Vector3 force, ForceMode mode)
+        /// <summary>
+        /// 设置刚体是否受重力影响
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="useGravity">是否受重力影响</param>
+        public static void SetActorUseGravity(long actor, bool useGravity)
         {
-            addForce(actor, force.ToPx(), (int)mode);
+            setUseGravity((IntPtr)actor, useGravity);
         }
+
+        /// <summary>
+        /// 设置刚体是否是运动学的
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="isKinematic"></param>
+        public static void SetIsKinematic(long actor, bool isKinematic)
+        {
+            setIsKinematic((IntPtr)actor, isKinematic);
+        }
+        
+        public static void AddForce(long actor, Vector3 force, ForceMode mode)
+        {
+            addForce((IntPtr)actor, force.ToPx(), (int)mode);
+        }
+
+        #endregion
 
         #region Scene Query
-        public static bool Raycast(IntPtr scene, Vector3 origin, Vector3 direction, float maxDistance, int layerMask)
+        public static bool Raycast(long scene, Vector3 origin, Vector3 direction, float maxDistance, int layerMask)
         {
-            return raycast(scene, origin.ToPx(), direction.ToPx(), maxDistance, layerMask);
+            return raycast((IntPtr)scene, origin.ToPx(), direction.ToPx(), maxDistance, layerMask);
         }
 
-        public static bool Raycast2(IntPtr scene, Vector3 origin, Vector3 direction, float maxDistance, int layerMask)
+        public static bool Raycast2(long scene, Vector3 origin, Vector3 direction, out PxRaycastHitP hitInfo, float maxDistance, int layerMask)
         {
-            PxRaycastHitP hitInfo = default;
-            bool hit = raycast2(scene, origin.ToPx(), direction.ToPx(), ref hitInfo, maxDistance, layerMask);
+            hitInfo = default;
+            bool hit = raycast2((IntPtr)scene, origin.ToPx(), direction.ToPx(), ref hitInfo, maxDistance, layerMask);
 
             return hit;
         }
 
-        public static int RaycastNonAlloc(IntPtr scene, Vector3 origin, Vector3 direction, PxRaycastHitP[] hitInfo, float maxDistance, int layerMask)
+        public static int RaycastNonAlloc(long scene, Vector3 origin, Vector3 direction, PxRaycastHitP[] hitInfo, float maxDistance, int layerMask)
         {
             int maxCount = hitInfo.Length;
-            int hitCount = raycastNonAlloc(scene, origin.ToPx(), direction.ToPx(), maxDistance, layerMask, hitInfo, maxCount);
+            int hitCount = raycastNonAlloc((IntPtr)scene, origin.ToPx(), direction.ToPx(), maxDistance, layerMask, hitInfo, maxCount);
             return hitCount;
         }
 
 
-        public static bool SphereCast(IntPtr scene, Vector3 origin, float radius, Vector3 direction, out PxRaycastHitP hitInfo, float maxDistance, int layerMask)
+        public static bool SphereCast(long scene, Vector3 origin, float radius, Vector3 direction, out PxRaycastHitP hitInfo, float maxDistance, int layerMask)
         {
             hitInfo = default;
-            return sphereCast(scene, origin.ToPx(), radius, direction.ToPx(), ref hitInfo, maxDistance, layerMask);
+            return sphereCast((IntPtr)scene, origin.ToPx(), radius, direction.ToPx(), ref hitInfo, maxDistance, layerMask);
         }
 
-        public static int SphereCastNonAlloc(IntPtr scene, Vector3 origin, float radius, Vector3 direction, PxRaycastHitP[] results, float maxDistance, int layerMask)
+        public static int SphereCastNonAlloc(long scene, Vector3 origin, float radius, Vector3 direction, PxRaycastHitP[] results, float maxDistance, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = sphereCastNonAlloc(scene, origin.ToPx(), radius, direction.ToPx(), maxDistance, layerMask, results, maxCount);
+            int hitCount = sphereCastNonAlloc((IntPtr)scene, origin.ToPx(), radius, direction.ToPx(), maxDistance, layerMask, results, maxCount);
             return hitCount;
         }
 
 
-	    public static bool BoxCast(IntPtr scene, Vector3 center, Vector3 halfExtents, Vector3 direction, ref PxRaycastHitP hitInfo, Quaternion orientation, float maxDistance, int layerMask)
+        public static bool BoxCast(long scene, Vector3 center, Vector3 halfExtents, Vector3 direction, out PxRaycastHitP hitInfo, Quaternion orientation, float maxDistance, int layerMask)
         {
             hitInfo = default;
-            return boxCast(scene, center.ToPx(), halfExtents.ToPx(), direction.ToPx(), ref hitInfo, orientation.ToPx(), maxDistance, layerMask);
+            return boxCast((IntPtr)scene, center.ToPx(), halfExtents.ToPx(), direction.ToPx(), ref hitInfo, orientation.ToPx(), maxDistance, layerMask);
         }
         
 
-        public static int BoxCastNonAlloc(IntPtr scene, Vector3 center, Vector3 halfExtents, Vector3 direction, PxRaycastHitP[] results, Quaternion orientation, float maxDistance, int layerMask)
+        public static int BoxCastNonAlloc(long scene, Vector3 center, Vector3 halfExtents, Vector3 direction, PxRaycastHitP[] results, Quaternion orientation, float maxDistance, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = boxCastNonAlloc(scene, center.ToPx(), halfExtents.ToPx(), direction.ToPx(), orientation.ToPx(), maxDistance, layerMask, results, maxCount);
+            int hitCount = boxCastNonAlloc((IntPtr)scene, center.ToPx(), halfExtents.ToPx(), direction.ToPx(), orientation.ToPx(), maxDistance, layerMask, results, maxCount);
             return hitCount;
         }
 
-	    public static bool CapsuleCast(IntPtr scene, Vector3 point1, Vector3 point2, float radius, Vector3 direction, ref PxRaycastHitP hitInfo, float maxDistance, int layerMask)
+        public static bool CapsuleCast(long scene, Vector3 point1, Vector3 point2, float radius, Vector3 direction, out PxRaycastHitP hitInfo, float maxDistance, int layerMask)
         {
             hitInfo = default;
-            return capsuleCast(scene, point1.ToPx(), point1.ToPx(), radius, direction.ToPx(), ref hitInfo, maxDistance, layerMask);
+            return capsuleCast((IntPtr)scene, point1.ToPx(), point1.ToPx(), radius, direction.ToPx(), ref hitInfo, maxDistance, layerMask);
         }
         
 
-        public static int CapsuleCastNonAlloc(IntPtr scene, Vector3 point1, Vector3 point2, float radius, Vector3 direction, PxRaycastHitP[] results, float maxDistance, int layerMask)
+        public static int CapsuleCastNonAlloc(long scene, Vector3 point1, Vector3 point2, float radius, Vector3 direction, PxRaycastHitP[] results, float maxDistance, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = capsuleCastNonAlloc(scene, point1.ToPx(), point1.ToPx(), radius, direction.ToPx(), maxDistance, layerMask, results, maxCount);
+            int hitCount = capsuleCastNonAlloc((IntPtr)scene, point1.ToPx(), point1.ToPx(), radius, direction.ToPx(), maxDistance, layerMask, results, maxCount);
             return hitCount;
         }
 
 
 
-        public static int OverlapSphereNonAlloc(IntPtr scene, Vector3 position, float radius, PxActorShapeP[] results, int layerMask)
+        public static int OverlapSphereNonAlloc(long scene, Vector3 position, float radius, PxActorShapeP[] results, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = overlapSphereNonAlloc(scene, position.ToPx(), radius, layerMask, results, maxCount);
+            int hitCount = overlapSphereNonAlloc((IntPtr)scene, position.ToPx(), radius, layerMask, results, maxCount);
             return hitCount;
         }
 
-        public static int OverlapBoxNonAlloc(IntPtr scene, Vector3 center, Vector3 halfExtents, PxActorShapeP[] results, Quaternion orientation, int layerMask)
+        public static int OverlapBoxNonAlloc(long scene, Vector3 center, Vector3 halfExtents, PxActorShapeP[] results, Quaternion orientation, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = overlapBoxNonAlloc(scene, center.ToPx(), halfExtents.ToPx(), orientation.ToPx(), layerMask, results, maxCount);
+            int hitCount = overlapBoxNonAlloc((IntPtr)scene, center.ToPx(), halfExtents.ToPx(), orientation.ToPx(), layerMask, results, maxCount);
             return hitCount;
         }
-	    
-        public static int OverlapCapsuleNonAlloc(IntPtr scene, Vector3 point0, Vector3 point1,  float radius, PxActorShapeP[] results, int layerMask)
+        
+        public static int OverlapCapsuleNonAlloc(long scene, Vector3 point0, Vector3 point1,  float radius, PxActorShapeP[] results, int layerMask)
         {
             int maxCount = results.Length;
-            int hitCount = overlapCapsuleNonAlloc(scene, point0.ToPx(), point1.ToPx(), radius, layerMask, results, maxCount);
+            int hitCount = overlapCapsuleNonAlloc((IntPtr)scene, point0.ToPx(), point1.ToPx(), radius, layerMask, results, maxCount);
             return hitCount;
         }
         #endregion
 
 
         #region Sync Date / Event
-        public static void SyncTransforms(IntPtr scene, PxActorSync[] tranforms, uint count)
+        /// <summary>
+        /// 同游戏世界坐标到物理世界
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="tranforms"></param>
+        /// <param name="count"></param>
+        public static void SyncTransforms(long scene, PxActorSync[] tranforms, uint count)
         {
-            syncTransforms(scene, tranforms, count);
+            syncTransforms((IntPtr)scene, tranforms, count);
         }
 
-        public static uint FetchTransforms(IntPtr scene, PxActorSync[] tranforms)
+        /// <summary>
+        /// 从物理世界获取模拟后的坐标
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="tranforms"></param>
+        /// <returns></returns>
+        public static uint FetchTransforms(long scene, PxActorSync[] tranforms)
         {
             uint count = 0;
-            fetchTransforms(scene, tranforms, ref count);
+            fetchTransforms((IntPtr)scene, tranforms, ref count);
             return count;
         }
 
-        public static uint FetchCollisions(IntPtr scene, PxCollision[] collisions)
+        /// <summary>
+        /// 从物理世界获取模拟后的碰撞信息
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="collisions"></param>
+        /// <returns></returns>
+        public static uint FetchCollisions(long scene, PxCollision[] collisions)
         {
             uint count = 0;
-            fetchContacts(scene, collisions, ref count);
+            fetchContacts((IntPtr)scene, collisions, ref count);
             return count;
         }
 
-        public static uint FetchTriggers(IntPtr scene, PxTrigger[] triggers)
+        /// <summary>
+        /// 从物理世界获取模拟后的触发器事件
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="triggers"></param>
+        /// <returns></returns>
+        public static uint FetchTriggers(long scene, PxTrigger[] triggers)
         {
             uint count = 0;
-            fetchTriggers(scene, triggers, ref count);
+            fetchTriggers((IntPtr)scene, triggers, ref count);
             return count;
         } 
         #endregion
-
-
-        /// <summary>
-        /// position: offset [0-2]
-        /// quaternoin: offset[3-6]
-        /// </summary>
-        private static float[] sCache = new float[65535];
-
+        
         public static PxVec3 ToPx(this Vector3 self)
         {
             return new PxVec3() 
@@ -488,8 +590,8 @@ namespace ET
             };
         }
     }
-
-
+    
+    #region PhysX Struct
 
     [StructLayout(LayoutKind.Sequential)]
     public struct PxVec3
@@ -497,7 +599,7 @@ namespace ET
         public float x;
         public float y;
         public float z;
-    };
+    }
 
 
     [StructLayout(LayoutKind.Sequential)]
@@ -507,7 +609,7 @@ namespace ET
         public float y;
         public float z;
         public float w;
-    };
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct PxTransformP
@@ -524,7 +626,7 @@ namespace ET
         public PxVec3 normal;
         public PxVec3 impulse;
         public float separation;
-    };
+    }
 
     [StructLayout(LayoutKind.Sequential)]
     public struct PxActorSync
@@ -591,4 +693,6 @@ namespace ET
         public float u;
         public float v;
     }
+
+    #endregion
 }

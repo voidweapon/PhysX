@@ -53,6 +53,7 @@ extern "C"
 	DllExport void getVelocity(PxRigidActor* actor, PxVec3& velocity);
 	DllExport void setConstraints(PxRigidActor* actor, int constraints);
 	DllExport void setCollisionDetectionMode(PxRigidActor* actor, int collisionDetectionMode);
+	DllExport void setLayer(PxRigidActor* actor, int layer);
 
 #pragma region Collider
 	DllExport void removeCollider(PxRigidActor* actor, PxShape* shape);
