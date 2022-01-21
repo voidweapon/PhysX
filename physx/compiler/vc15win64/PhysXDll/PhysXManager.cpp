@@ -104,6 +104,9 @@ bool PhysXManager::onInit(bool* collisionTable)
 	mCooking = PxCreateCooking(PX_PHYSICS_VERSION, *mFoundation, params);
 
 	mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0);
+
+	mCpuDispatcher = PxDefaultCpuDispatcherCreate(mNbThreads);
+
 	int index = 0;
 	for (size_t i = 0; i < 32; i++)
 	{
@@ -239,7 +242,6 @@ ControlledScene* PhysXManager::createScene()
 	PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
 
-	mCpuDispatcher = PxDefaultCpuDispatcherCreate(mNbThreads);
 	sceneDesc.cpuDispatcher = mCpuDispatcher;
 	sceneDesc.filterShader = contactReportFilterShader;
 	//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
