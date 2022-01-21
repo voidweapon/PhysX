@@ -401,7 +401,11 @@ int ControlledScene::raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastB
 
 bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask)
 {
-	PxGeometry sphere = PxSphereGeometry(radius);
+	/*
+	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
+	* Don't use = operate or copy constructor for create Geometry for overlap
+	*/
+	PxSphereGeometry sphere(radius);
 	PxTransform tm(origin);
 	PxSweepBuffer rayHit;
 	bool ret = this->__sweep(sphere, tm, direction, rayHit, maxDistance, layerMask, false);
@@ -414,8 +418,12 @@ bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, 
 	return ret;
 }
 int ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
-{
-	PxGeometry sphere = PxSphereGeometry(radius);
+{	
+	/*
+	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
+	* Don't use = operate or copy constructor for create Geometry for overlap
+	*/
+	PxSphereGeometry sphere(radius);
 	PxTransform tm(origin);
 	this->__sweep(sphere, tm, direction, hitInfo, maxDistance, layerMask, true);
 
@@ -424,7 +432,11 @@ int ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, P
 
 bool ControlledScene::boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHit& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask)
 {
-	PxGeometry box = PxBoxGeometry(halfExtents);
+	/*
+	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
+	* Don't use = operate or copy constructor for create Geometry for overlap
+	*/
+	PxBoxGeometry box(halfExtents);
 	PxTransform tm(center, orientation);
 	PxSweepBuffer rayHit;
 	bool ret = this->__sweep(box, tm, direction, rayHit, maxDistance, layerMask, false);
@@ -438,7 +450,11 @@ bool ControlledScene::boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 directio
 }
 int ControlledScene::boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask)
 {
-	PxGeometry box = PxBoxGeometry(halfExtents);
+	/*
+	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
+	* Don't use = operate or copy constructor for create Geometry for overlap
+	*/
+	PxBoxGeometry box(halfExtents);
 	PxTransform tm(center);
 	this->__sweep(box, tm, direction, hitInfo, maxDistance, layerMask, true);
 
@@ -447,9 +463,13 @@ int ControlledScene::boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 d
 
 bool ControlledScene::capsuleCast(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask)
 {
+	/*
+	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
+	* Don't use = operate or copy constructor for create Geometry for overlap
+	*/
 	PxVec3 shapeDir = point1 - point2;
 	PxReal halfHeigh = shapeDir.magnitude() - 2.0f* radius;
-	PxGeometry capsule = PxCapsuleGeometry(radius, halfHeigh);
+	PxCapsuleGeometry capsule(radius, halfHeigh);
 	PxVec3 up = PxVec3(0.0f,1.0f,0.0f);
 	PxQuat pose = FromToRotation(up, shapeDir);
 	PxTransform tm(0.5f * (point1 + point2), pose);
@@ -466,9 +486,13 @@ bool ControlledScene::capsuleCast(PxVec3 point1, PxVec3 point2, float radius, Px
 }
 int ControlledScene::capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
 {
+	/* 
+	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
+	* Don't use = operate or copy constructor for create Geometry for overlap
+	*/
 	PxVec3 shapeDir = point1 - point2;
 	PxReal halfHeigh = shapeDir.magnitude() - 2.0f* radius;
-	PxGeometry capsule = PxCapsuleGeometry(radius, halfHeigh);
+	PxCapsuleGeometry capsule(radius, halfHeigh);
 	PxVec3 up = PxVec3(0.0f,1.0f,0.0f);
 	PxQuat pose = FromToRotation(up, shapeDir);
 	PxTransform tm(0.5f * (point1 + point2), pose);
