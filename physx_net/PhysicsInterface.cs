@@ -77,6 +77,9 @@ namespace ET
         
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
         private static extern void setIsKinematic(IntPtr actor, bool isKinematic);
+        
+        [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
+        private static extern void setLayer(IntPtr actor, int layer);
         #endregion
 
         //============================================================================================================================
@@ -99,16 +102,16 @@ namespace ET
         //============================================================================================================================
         #region Sync Data / Event
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void syncTransforms(IntPtr scene, [In] PxActorSync[] tranforms, uint count);
+        private static extern unsafe void syncTransforms(IntPtr scene, PxActorSync* tranforms, uint count);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void fetchTransforms(IntPtr scene, [Out] PxActorSync[] tranforms, ref uint count);
+        private static extern unsafe void fetchTransforms(IntPtr scene, PxActorSync* tranforms, ref uint count);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void fetchContacts(IntPtr scene, [Out] PxCollision[] collisions, ref uint count);
+        private static extern unsafe void fetchContacts(IntPtr scene,  PxCollision* collisions, ref uint count);
 
         [DllImport(PhysXDLL, CallingConvention = CallingConvention.Cdecl)]
-        private static extern void fetchTriggers(IntPtr scene, [Out] PxTrigger[] triggers, ref uint count);
+        private static extern unsafe void fetchTriggers(IntPtr scene,  PxTrigger* triggers, ref uint count);
         #endregion
 
         //============================================================================================================================
@@ -399,6 +402,17 @@ namespace ET
         {
             setIsKinematic((IntPtr)actor, isKinematic);
         }
+
+        /// <summary>
+        /// 设置刚体的layer
+        /// 刚体下所有的Shape的layer都会改变
+        /// </summary>
+        /// <param name="actor"></param>
+        /// <param name="layer">层级</param>
+        public static void SetLayer(long actor, int layer)
+        {
+            setLayer((IntPtr)actor, layer);
+        }
         
         public static void AddForce(long actor, Vector3 force, ForceMode mode)
         {
@@ -503,9 +517,13 @@ namespace ET
         /// <param name="scene"></param>
         /// <param name="tranforms"></param>
         /// <param name="count"></param>
-        public static void SyncTransforms(long scene, PxActorSync[] tranforms, uint count)
+        public static unsafe void SyncTransforms(long scene, PxActorSync[] tranforms, uint count)
         {
-            syncTransforms((IntPtr)scene, tranforms, count);
+            fixed (PxActorSync* p = tranforms)
+            {
+                syncTransforms((IntPtr)scene, p, count);
+            }
+
         }
 
         /// <summary>
@@ -514,10 +532,14 @@ namespace ET
         /// <param name="scene"></param>
         /// <param name="tranforms"></param>
         /// <returns></returns>
-        public static uint FetchTransforms(long scene, PxActorSync[] tranforms)
+        public static unsafe uint FetchTransforms(long scene, PxActorSync[] tranforms)
         {
             uint count = 0;
-            fetchTransforms((IntPtr)scene, tranforms, ref count);
+            fixed (PxActorSync* p = tranforms)
+            {
+                fetchTransforms((IntPtr)scene, p, ref count);
+            }
+
             return count;
         }
 
@@ -527,10 +549,14 @@ namespace ET
         /// <param name="scene"></param>
         /// <param name="collisions"></param>
         /// <returns></returns>
-        public static uint FetchCollisions(long scene, PxCollision[] collisions)
+        public static unsafe uint FetchCollisions(long scene, PxCollision[] collisions)
         {
             uint count = 0;
-            fetchContacts((IntPtr)scene, collisions, ref count);
+            fixed (PxCollision* p = collisions)
+            {
+                fetchContacts((IntPtr)scene, p, ref count);
+            }
+
             return count;
         }
 
@@ -540,10 +566,14 @@ namespace ET
         /// <param name="scene"></param>
         /// <param name="triggers"></param>
         /// <returns></returns>
-        public static uint FetchTriggers(long scene, PxTrigger[] triggers)
+        public static unsafe uint FetchTriggers(long scene, PxTrigger[] triggers)
         {
             uint count = 0;
-            fetchTriggers((IntPtr)scene, triggers, ref count);
+            fixed (PxTrigger* p = triggers)
+            {
+                fetchTriggers((IntPtr)scene, p, ref count);
+            }
+
             return count;
         } 
         #endregion
