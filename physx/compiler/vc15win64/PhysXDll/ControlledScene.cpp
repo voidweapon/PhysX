@@ -412,7 +412,7 @@ bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, 
 	
 	if (ret)
 	{
-		this->__sweepBufferToPxRaycastHit(rayHit, hitInfo);
+		this->__sweepBufferToPxRaycastHit(rayHit, &hitInfo);
 	}
 
 	return ret;
@@ -443,7 +443,7 @@ bool ControlledScene::boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 directio
 	
 	if (ret)
 	{
-		this->__sweepBufferToPxRaycastHit(rayHit, hitInfoOut);
+		this->__sweepBufferToPxRaycastHit(rayHit, &hitInfoOut);
 	}
 
 	return ret;
@@ -479,7 +479,7 @@ bool ControlledScene::capsuleCast(PxVec3 point1, PxVec3 point2, float radius, Px
 	
 	if (ret)
 	{
-		this->__sweepBufferToPxRaycastHit(rayHit, hitInfoOut);
+		 this->__sweepBufferToPxRaycastHit(rayHit, &hitInfoOut);
 	}
 
 	return ret;
@@ -511,7 +511,7 @@ bool ControlledScene::overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer
 	*/
 	PxSphereGeometry sphere(radius);
 	PxTransform tm(origin);
-	return this->__overlap(sphere, tm, result, layerMask, true);
+	return this->__overlap(sphere, tm, result, layerMask, false);
 }
 bool ControlledScene::overlapBoxNonAlloc(PxVec3 center, PxVec3 halfExtents, PxQuat orientation, PxOverlapBuffer& result, int layerMask)
 {
@@ -564,7 +564,7 @@ bool ControlledScene::__overlap(PxGeometry& geometry, PxTransform& pose, PxOverl
 	//overlap can't ues PxQueryHitType::eBLOCK
 	//filterData.word1 = castAll ? 1 : 0;
 	//PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER;
-	PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER;
+	PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC;
 	if (!castAll)
 	{
 		flags |= PxQueryFlag::eANY_HIT;
@@ -574,16 +574,17 @@ bool ControlledScene::__overlap(PxGeometry& geometry, PxTransform& pose, PxOverl
 	return mScene->overlap(geometry, pose, result, Queryfilter, this);
 }
 
-void ControlledScene::__sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit& hitInfo)
+void ControlledScene::__sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit* hitInfo)
 {
 	auto hit = rayHit.block;
-	hitInfo.actor = hit.actor;
-	hitInfo.shape = hit.shape;
-	hitInfo.faceIndex = hit.faceIndex;
-	hitInfo.flags = hit.flags;
-	hitInfo.position = hit.position;
-	hitInfo.normal = hit.normal;
-	hitInfo.distance = hit.distance;
+	hitInfo->actor = hit.actor;
+	hitInfo->shape = hit.shape;
+	hitInfo->faceIndex = hit.faceIndex;
+	hitInfo->flags = hit.flags;
+	hitInfo->position = hit.position;
+	hitInfo->normal = hit.normal;
+	hitInfo->distance = hit.distance;
+
 }
 
 

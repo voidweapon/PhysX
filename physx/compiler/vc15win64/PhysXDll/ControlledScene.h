@@ -104,7 +104,7 @@ private:
 	void __initShape(PxShape* shape, int layer, bool isTrigger);
 	bool __sweep(PxGeometry& geometry, PxTransform& pose, PxVec3 direction, PxSweepBuffer& rayHit, float maxDistance, int layerMask, bool castAll);
 	bool __overlap(PxGeometry& geometry, PxTransform& pose, PxOverlapBuffer& result, int layerMask, bool castAll);
-	void __sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit& hitInfo);
+	void __sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit* hitInfo);
 private:
 	std::vector<PxCollision>		mListCollision;
 	std::vector<PxTrigger>			mListTrigger;
