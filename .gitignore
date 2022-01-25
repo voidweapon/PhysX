@@ -62,3 +62,4 @@ Server/.DS_Store
 /CMakeFiles
 /x64
 /PhysXDll/x64
+/externals/android-ndk*
