@@ -10,12 +10,12 @@ ControlledScene::ControlledScene(PxPhysics* physics, PxScene* scene, PxMaterial*
 
 ControlledScene::~ControlledScene()
 {
-	mPhysics = nullptr;
-	mScene = nullptr;
-	mDefaultMaterial = nullptr;
+	mPhysics = NULL;
+	mScene = NULL;
+	mDefaultMaterial = NULL;
 }
 
-#pragma region Simulation Event
+//=================================== Simulation Event ======================================
 void ControlledScene::onTrigger(PxTriggerPair* pairs, PxU32 count)
 {
 	for (size_t i = 0; i < count; i++)
@@ -40,6 +40,8 @@ void ControlledScene::onTrigger(PxTriggerPair* pairs, PxU32 count)
 
 void ControlledScene::onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
 {
+	PX_UNUSED(pairHeader);
+
 	for (size_t i = 0; i < nbPairs; i++)
 	{
 		PxContactPair contractPair = pairs[i];
@@ -66,7 +68,7 @@ void ControlledScene::onContact(const PxContactPairHeader& pairHeader, const PxC
 		mListCollision.push_back(collision);
 	}
 }
-#pragma endregion
+//===================================
 
 void ControlledScene::release()
 {
@@ -75,7 +77,7 @@ void ControlledScene::release()
 		return;
 	}
 	mScene->release();
-	mScene = nullptr;
+	mScene = NULL;
 }
 
 void ControlledScene::stepPhysicsScene(PxReal dt)
@@ -91,7 +93,7 @@ void ControlledScene::stepPhysicsScene(PxReal dt)
 	mScene->fetchResults(true);
 }
 
-#pragma region RigidActor
+//=================================== RigidActor ===================================
 
 void ControlledScene::__initShape(PxShape* shape, int layer, bool isTrigger)
 {
@@ -119,7 +121,7 @@ void ControlledScene::__initShape(PxShape* shape, int layer, bool isTrigger)
 
 PxRigidActor* ControlledScene::createRigidbody(PxTransform tm, bool isStatic)
 {
-	PxRigidActor* actor = nullptr;
+	PxRigidActor* actor = NULL;
 	if (isStatic) 
 	{
 		PxRigidStatic* staticRd = mPhysics->createRigidStatic(tm);
@@ -140,8 +142,8 @@ PxRigidActor* ControlledScene::createRigidbody(PxTransform tm, bool isStatic)
 
 PxRigidActor* ControlledScene::changeRigidbodyStatic(PxRigidActor* actor, bool isStatic)
 {
-	auto tm = actor->getGlobalPose();
-	PxRigidActor* newActor = nullptr;
+	PxTransform tm = actor->getGlobalPose();
+	PxRigidActor* newActor = NULL;
 
 	if (isStatic)
 	{
@@ -255,10 +257,10 @@ void ControlledScene::removeCollider(PxRigidActor* actor, PxShape* shape)
 	actor->detachShape(*shape);
 }
 
-#pragma endregion
+//===================================
 
 
-#pragma region Change Single RigidActror Transform
+//=================================== Change Single RigidActror Transform ===================================
 void ControlledScene::setColliderPosition(PxRigidActor* rigidActor, PxVec3 pos)
 {
 	if (!mScene || !rigidActor)
@@ -280,9 +282,9 @@ void ControlledScene::setColliderQuaternion(PxRigidActor* rigidActor, PxQuat qua
 	tm.q = qua;
 	rigidActor->setGlobalPose(tm);
 }
-#pragma endregion
+//===================================
 
-#pragma region Sync Data
+//=================================== Sync Data ===================================
 void ControlledScene::syncTransforms(PxActorSync* tranforms, uint32_t count)
 {
 	for (size_t i = 0; i < count; i++)
@@ -340,10 +342,9 @@ void ControlledScene::fetchContacts(PxCollision* collisions, uint32_t &count)
 		collisions[i] = mListCollision[i];
 	}
 }
-#pragma endregion
+//===================================
 
-
-#pragma region Raycast
+//=================================== Raycast ===================================
 bool ControlledScene::raycast(PxVec3&  origin, PxVec3&  direction, PxReal maxDistance, PxI32 layerMask)
 {
 	PxRaycastBuffer rayHit;
@@ -355,12 +356,6 @@ bool ControlledScene::raycast(PxVec3&  origin, PxVec3&  direction, PxReal maxDis
 	PxQueryFilterData Queryfilter(filterData, PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER);
 	
 	bool hit =  mScene->raycast(origin, direction, maxDistance, rayHit, hitFlags, Queryfilter, this);
-
-	if (hit)
-	{
-		PxRaycastHit hitInfo = rayHit.getAnyHit(0);
-		PxVec3 pos = hitInfo.position;
-	}
 
 	return hit;
 }
@@ -385,7 +380,7 @@ bool ControlledScene::raycast(PxVec3 origin, PxVec3 direction, PxRaycastHit& hit
 	return hit;
 }
 
-int ControlledScene::raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask)
+PxU32 ControlledScene::raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask)
 {
 	PxHitFlags hitFlags = (PxHitFlags)(PxHitFlag::eDEFAULT);
 	PxFilterData filterData;
@@ -417,7 +412,7 @@ bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, 
 
 	return ret;
 }
-int ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
+PxU32 ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
 {	
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -448,14 +443,14 @@ bool ControlledScene::boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 directio
 
 	return ret;
 }
-int ControlledScene::boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask)
+PxU32 ControlledScene::boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask)
 {
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
 	* Don't use = operate or copy constructor for create Geometry for overlap
 	*/
 	PxBoxGeometry box(halfExtents);
-	PxTransform tm(center);
+	PxTransform tm(center, orientation);
 	this->__sweep(box, tm, direction, hitInfo, maxDistance, layerMask, true);
 
 	return hitInfo.getNbAnyHits();
@@ -484,7 +479,7 @@ bool ControlledScene::capsuleCast(PxVec3 point1, PxVec3 point2, float radius, Px
 
 	return ret;
 }
-int ControlledScene::capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
+PxU32 ControlledScene::capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
 {
 	/* 
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -576,7 +571,7 @@ bool ControlledScene::__overlap(PxGeometry& geometry, PxTransform& pose, PxOverl
 
 void ControlledScene::__sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit* hitInfo)
 {
-	auto hit = rayHit.block;
+	physx::PxSweepHit hit = rayHit.block;
 	hitInfo->actor = hit.actor;
 	hitInfo->shape = hit.shape;
 	hitInfo->faceIndex = hit.faceIndex;
@@ -591,7 +586,9 @@ void ControlledScene::__sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRayca
 PxQueryHitType::Enum ControlledScene::preFilter(
 	const PxFilterData& filterData, const PxShape* shape, const PxRigidActor* actor, PxHitFlags& queryFlags)
 {
-	auto shapeFilterData = shape->getQueryFilterData();
+	PX_UNUSED(actor);
+	PX_UNUSED(queryFlags);
+	physx::PxFilterData shapeFilterData = shape->getQueryFilterData();
 	if (shapeFilterData.word0 & filterData.word0)
 	{
 		if (filterData.word1 == 0)
@@ -605,10 +602,12 @@ PxQueryHitType::Enum ControlledScene::preFilter(
 
 PxQueryHitType::Enum ControlledScene::postFilter(const PxFilterData& filterData, const PxQueryHit& hit)
 {
+	PX_UNUSED(filterData);
+	PX_UNUSED(hit);
 	return PxQueryHitType::eTOUCH;
 }
 
-#pragma endregion
+//===================================
 
 void ControlledScene::__clearCache()
 {

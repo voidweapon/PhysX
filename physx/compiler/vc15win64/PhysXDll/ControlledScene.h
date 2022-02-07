@@ -84,16 +84,16 @@ public:
 
 	bool raycast(PxVec3& origin, PxVec3& direction, PxReal maxDistance, PxI32 layerMask);
 	bool raycast(PxVec3 origin, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask);
-	int raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask);
+	PxU32 raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask);
 
 	bool sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask);
-	int sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
+	PxU32 sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
 
 	bool boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHit& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
-	int boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask);
+	PxU32 boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask);
 
 	bool capsuleCast(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask);
-	int capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
+	PxU32 capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
 
 	bool overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer& result, int layerMask);
 	bool overlapBoxNonAlloc(PxVec3 center, PxVec3 halfExtents, PxQuat orientation, PxOverlapBuffer& result, int layerMask);

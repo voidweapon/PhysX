@@ -5,12 +5,22 @@
 
 #include"PhysXManager.h"
 
+#if  _WIN32 || _WIN64
 #define DllExport  __declspec(dllexport)
+#else
+#define DllExport
+#endif // _WIN32 || _WIN64
+
+
 
 using namespace physx;
 
+
+#ifdef __cplusplus
 extern "C" 
 {
+#endif
+
 #pragma region Physics
 	DllExport bool initPhysics(bool* collisionTable);
 	DllExport void cleanupPhysics();
@@ -98,5 +108,8 @@ extern "C"
 	DllExport void addForce(void* actor, PxVec3 force, int mode);
 #pragma endregion
 
+#ifdef __cplusplus
 }
+#endif
+
 #endif
