@@ -26,7 +26,7 @@ cmake -G "MinGW Makefiles" ^
       -DCM_ANDROID_FP="softfp" ^
       -DCMAKE_INSTALL_PREFIX="install/android-19/PhysX"^
       -DANDROID_NATIVE_API_LEVEL="android-19" ^
-      -DANDROID_ABI="armeabi-v7a" ^
+      -DANDROID_ABI="x86" ^
       -DCMAKE_BUILD_TYPE=Release 
 popd     
 

@@ -63,4 +63,4 @@ add_library(PhysXDLL SHARED ${PHYSXDLL_SOURCES})
 ADD_SUBDIRECTORY(${PHYSX_ROOT_DIR}/compiler/public ${CMAKE_CURRENT_BINARY_DIR}/physx)
 
 # Add physx libraries to target
-target_link_libraries(PhysXDLL PUBLIC  	PhysXExtensions PhysX	PhysXPvdSDK	PhysXVehicle	PhysXCharacterKinematic	PhysXCooking	PhysXCommon	PhysXFoundation)
+target_link_libraries(PhysXDLL PUBLIC  	PhysXExtensions PhysX	PhysXPvdSDK	PhysXCooking	PhysXCommon	PhysXFoundation)
