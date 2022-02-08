@@ -3,7 +3,7 @@
 cd ./compiler/linux
 
 export ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export PHYSX_ROOT_DIR="$ROOT_DIR/../physx"
+export PHYSX_ROOT_DIR="$ROOT_DIR/../../../physx"
 export PM_PxShared_PATH="$PHYSX_ROOT_DIR/../pxshared"
 export PM_CMakeModules_PATH="$PHYSX_ROOT_DIR/../externals/cmakemodules"
 export PM_opengllinux_PATH="$PHYSX_ROOT_DIR/../externals/opengl-linux"
