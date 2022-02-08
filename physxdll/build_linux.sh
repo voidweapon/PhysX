@@ -1,5 +1,7 @@
 #!/bin/bash +x
 
+cd ./compiler/linux
+
 export ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export PHYSX_ROOT_DIR="$ROOT_DIR/../physx"
 export PM_PxShared_PATH="$PHYSX_ROOT_DIR/../pxshared"
