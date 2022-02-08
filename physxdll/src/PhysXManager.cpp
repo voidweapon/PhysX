@@ -255,7 +255,7 @@ ControlledScene* PhysXManager::createScene()
 	PxScene* newScene = mPhysics->createScene(sceneDesc);
 	if (!newScene) 
 	{
-		return false;
+		return NULL;
 	}
 
 	newScene->setBounceThresholdVelocity(mBounceThreshold);
