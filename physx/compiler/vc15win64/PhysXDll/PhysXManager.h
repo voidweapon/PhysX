@@ -17,7 +17,7 @@ public:
 	~PhysXManager();
 
 	/// <summary>
-	/// ³õÊ¼»¯ÎïÀíÒıÇæ
+	/// åˆå§‹åŒ–ç‰©ç†å¼•æ“
 	/// </summary>
 	bool onInit(bool* collisionTable);
 
@@ -42,17 +42,17 @@ public:
 	PxFrictionType::Enum getFrictionType();
 
 	/// <summary>
-	/// ¹Ø±ÕÎïÀíÒıÇæ
+	/// å…³é—­ç‰©ç†å¼•æ“
 	/// </summary>
 	void onShutdown();
 
 	/// <summary>
-	/// ´´½¨ÎïÀí³¡¾°
+	/// åˆ›å»ºç‰©ç†åœºæ™¯
 	/// </summary>
 	ControlledScene* createScene();
 
 	/// <summary>
-	/// Ïú»ÙÎïÀí³¡¾°
+	/// é”€æ¯ç‰©ç†åœºæ™¯
 	/// </summary>
 	void destroyScene(ControlledScene* scene);
 
