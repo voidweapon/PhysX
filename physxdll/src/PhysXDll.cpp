@@ -424,9 +424,9 @@ extern "C"
 		}
 
 		PxRaycastBuffer rayHit(&raycastCache[0], maxCount);
-		int count = scene->raycastNonAlloc(origin, direction, rayHit, maxDistance, layerMask);
+		PxU32 count = scene->raycastNonAlloc(origin, direction, rayHit, maxDistance, layerMask);
 
-		for (size_t i = 0; i < count; i++)
+		for (PxU32 i = 0; i < count; i++)
 		{
 			PxRaycastHit hitInfo = rayHit.getAnyHit(i);
 			hitInfoOut[i] = ConvertToHitP(hitInfo);
@@ -455,9 +455,9 @@ extern "C"
 		}
 
 		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
-		int count = scene->sphereCast(origin, radius, direction, rayHit, maxDistance, layerMask);
+		PxU32 count = scene->sphereCast(origin, radius, direction, rayHit, maxDistance, layerMask);
 
-		for (size_t i = 0; i < count; i++)
+		for (PxU32 i = 0; i < count; i++)
 		{
 			PxSweepHit hitInfo = rayHit.getAnyHit(i);
 			hitInfoOut[i] = ConvertToHitP(hitInfo);
@@ -485,9 +485,9 @@ extern "C"
 			maxCount = 65535;
 		}
 		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
-		int count = scene->boxCastNonAlloc(center, halfExtents, direction, orientation, rayHit, maxDistance, layerMask);
+		PxU32 count = scene->boxCastNonAlloc(center, halfExtents, direction, orientation, rayHit, maxDistance, layerMask);
 
-		for (size_t i = 0; i < count; i++)
+		for (PxU32 i = 0; i < count; i++)
 		{
 			PxSweepHit hitInfo = rayHit.getAnyHit(i);
 			hitInfoOut[i] = ConvertToHitP(hitInfo);
@@ -516,9 +516,9 @@ extern "C"
 		}
 
 		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
-		int count = scene->capsuleCastNonAlloc(point1, point2, radius, direction, rayHit, maxDistance, layerMask);
+		PxU32 count = scene->capsuleCastNonAlloc(point1, point2, radius, direction, rayHit, maxDistance, layerMask);
 
-		for (size_t i = 0; i < count; i++)
+		for (PxU32 i = 0; i < count; i++)
 		{
 			PxSweepHit hitInfo = rayHit.getAnyHit(i);
 			hitInfoOut[i] = ConvertToHitP(hitInfo);
