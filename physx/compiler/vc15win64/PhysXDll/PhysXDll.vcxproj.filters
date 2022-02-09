@@ -15,30 +15,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PhysXDll.h">
+    <ClInclude Include="..\..\..\..\physxdll\include\ControlledScene.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PhysXManager.h">
+    <ClInclude Include="..\..\..\..\physxdll\include\PhysXDll.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ControlledScene.h">
+    <ClInclude Include="..\..\..\..\physxdll\include\PhysXManager.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="PhysXPInvokeHelper.h">
+    <ClInclude Include="..\..\..\..\physxdll\include\PhysXPInvokeHelper.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="PhysXDll.cpp">
+    <ClCompile Include="..\..\..\..\physxdll\src\ControlledScene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PhysXManager.cpp">
+    <ClCompile Include="..\..\..\..\physxdll\src\PhysXDll.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ControlledScene.cpp">
+    <ClCompile Include="..\..\..\..\physxdll\src\PhysXManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="PhysXPInvokeHelper.cpp">
+    <ClCompile Include="..\..\..\..\physxdll\src\PhysXPInvokeHelper.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

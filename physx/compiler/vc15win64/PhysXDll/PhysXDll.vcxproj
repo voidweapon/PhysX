@@ -15,20 +15,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ControlledScene.h" />
-    <ClInclude Include="PhysXDll.h" />
-    <ClInclude Include="PhysXManager.h" />
-    <ClInclude Include="PhysXPInvokeHelper.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="ControlledScene.cpp" />
-    <ClCompile Include="PhysXDll.cpp" />
-    <ClCompile Include="PhysXManager.cpp" />
-    <ClCompile Include="PhysXPInvokeHelper.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\sdk_source_bin\PhysX.vcxproj">
       <Project>{e2694940-81a4-3039-ac44-568f1dab34b1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\sdk_source_bin\PhysXCommon.vcxproj">
+      <Project>{c85c0589-bd44-36b5-a6b0-eaab915cf673}</Project>
     </ProjectReference>
     <ProjectReference Include="..\sdk_source_bin\PhysXCooking.vcxproj">
       <Project>{7bfb251a-21d1-3b4c-9733-d8b8e020c063}</Project>
@@ -36,6 +27,21 @@
     <ProjectReference Include="..\sdk_source_bin\PhysXExtensions.vcxproj">
       <Project>{5181860f-cb12-36d8-bc01-9aa735c307d1}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\sdk_source_bin\PhysXFoundation.vcxproj">
+      <Project>{f533a466-4e03-32aa-9e0e-995f05d6c773}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\physxdll\include\ControlledScene.h" />
+    <ClInclude Include="..\..\..\..\physxdll\include\PhysXDll.h" />
+    <ClInclude Include="..\..\..\..\physxdll\include\PhysXManager.h" />
+    <ClInclude Include="..\..\..\..\physxdll\include\PhysXPInvokeHelper.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\physxdll\src\ControlledScene.cpp" />
+    <ClCompile Include="..\..\..\..\physxdll\src\PhysXDll.cpp" />
+    <ClCompile Include="..\..\..\..\physxdll\src\PhysXManager.cpp" />
+    <ClCompile Include="..\..\..\..\physxdll\src\PhysXPInvokeHelper.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -81,15 +87,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>D:\GitHub\PhysX-4.0.0\physx\bin\win.x86_64.vc141.mt\release\</OutDir>
+    <OutDir>D:\GitHub\PhysX\physx\bin\win.x86_64.vc141.mt\release\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='checked|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>D:\GitHub\PhysX-4.0.0\physx\bin\win.x86_64.vc141.mt\checked\</OutDir>
+    <OutDir>D:\GitHub\PhysX\physx\bin\win.x86_64.vc141.mt\checked\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>D:\GitHub\PhysX-4.0.0\physx\bin\win.x86_64.vc141.mt\debug\</OutDir>
+    <OutDir>D:\GitHub\PhysX\physx\bin\win.x86_64.vc141.mt\debug\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'">
     <ClCompile>
@@ -102,7 +108,7 @@
       <PreprocessorDefinitions>NDEBUG;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;PX_SUPPORT_PVD;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;$(SolutionDir)..\..\..\physxdll\include;$(SolutionDir)..\..\..\physxdll\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
@@ -126,7 +132,7 @@
       <PreprocessorDefinitions>_DEBUG;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;$(SolutionDir)..\..\..\physxdll\include;$(SolutionDir)..\..\..\physxdll\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -146,7 +152,7 @@
       <PreprocessorDefinitions>NDEBUG;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;PHYSX_PROFILE_SDK;PX_CHECKED=1;PX_NVTX=0;PX_SUPPORT_PVD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;$(SolutionDir)..\..\..\physxdll\include;$(SolutionDir)..\..\..\physxdll\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <FloatingPointModel>Fast</FloatingPointModel>
