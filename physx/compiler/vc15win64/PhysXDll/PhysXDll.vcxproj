@@ -9,6 +9,10 @@
       <Configuration>checked</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="profile|x64">
+      <Configuration>profile</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="release|x64">
       <Configuration>release</Configuration>
       <Platform>x64</Platform>
@@ -63,6 +67,12 @@
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='profile|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -81,6 +91,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='checked|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='profile|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -92,6 +105,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='checked|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>D:\GitHub\PhysX\physx\bin\win.x86_64.vc141.mt\checked\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='profile|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>D:\GitHub\PhysX\physx\bin\win.x86_64.vc141.mt\profile\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -150,6 +167,36 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;PHYSX_PROFILE_SDK;PX_CHECKED=1;PX_NVTX=0;PX_SUPPORT_PVD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;$(SolutionDir)..\..\..\physxdll\include;$(SolutionDir)..\..\..\physxdll\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <SupportJustMyCode>false</SupportJustMyCode>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+    <PostBuildEvent>
+      <Command>Xcopy $(TargetPath) D:\Projects\projectjclient\Libs\PhysX\   /y</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='profile|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;WIN32;WIN64;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_WINSOCK_DEPRECATED_NO_WARNINGS;PHYSXDLL_EXPORTS;_WINDOWS;_USRDLL;PHYSX_PROFILE_SDK;PX_PROFILE=1;PX_NVTX=0;PX_SUPPORT_PVD=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)..\..\..\physx\include;$(SolutionDir)..\..\..\physx\include\utils;$(SolutionDir)..\..\..\physx\source\common\src;$(SolutionDir)..\..\..\physx\samples\sampleframework\framework\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\renderer\include;$(SolutionDir)..\..\..\physx\samples\sampleframework\platform\include;$(SolutionDir)..\..\..\physx\test\common\Utils;$(SolutionDir)..\..\..\physx\source\common\include;$(SolutionDir)..\..\..\physx\source\geomutils\include;$(SolutionDir)..\..\..\physx\source\geomutils\src\contact;$(SolutionDir)..\..\..\physx\source\geomutils\src\common;$(SolutionDir)..\..\..\physx\source\geomutils\src\convex;$(SolutionDir)..\..\..\physx\source\geomutils\src\distance;$(SolutionDir)..\..\..\physx\source\geomutils\src\gjk;$(SolutionDir)..\..\..\physx\source\geomutils\src\intersection;$(SolutionDir)..\..\..\physx\source\geomutils\src\mesh;$(SolutionDir)..\..\..\physx\source\geomutils\src\Ice;$(SolutionDir)..\..\..\physx\source\geomutils\src\hf;$(SolutionDir)..\..\..\physx\source\geomutils\src\pcm;$(SolutionDir)..\..\..\physx\samples\pxtoolkit\include;$(SolutionDir)..\..\..\physx\..\pxshared\include;$(SolutionDir)..\..\..\physx\source\foundation\include;$(SolutionDir)..\..\..\physx\include\common;$(SolutionDir)..\..\..\physx\include\geometry;$(SolutionDir)..\..\..\physx\include\geomutils;$(SolutionDir)..\..\..\physxdll\include;$(SolutionDir)..\..\..\physxdll\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
