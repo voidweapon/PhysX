@@ -30,6 +30,9 @@ SET(PHYSXDLL_CXX_FLAGS_CHECKED "-O3 -g3 -gdwarf-2" CACHE INTERNAL "PhysXDll Chec
 SET(PHYSXDLL_CXX_FLAGS_PROFILE "-O3" CACHE INTERNAL "PhysXDll Profile CXX Flags")
 SET(PHYSXDLL_CXX_FLAGS_RELEASE "-O3" CACHE INTERNAL "PhysXDll Release CXX Flags")
 
+#This will properly propagate the linker flags for all build types (e.g., Debug, Release, etc...) to look for .so files in the current working directory first.
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath='$ORIGIN'")
+
 # These flags are local to the directory the CMakeLists.txt is in, so don't get carried over to OTHER CMakeLists.txt (thus the CACHE variables above)
 SET(PHYSXDLL_CXX_FLAGS ${PHYSX_CXX_FLAGS})
 
@@ -54,3 +57,4 @@ ADD_SUBDIRECTORY(${PHYSX_ROOT_DIR}/compiler/public ${CMAKE_CURRENT_BINARY_DIR}/p
 
 # Add physx libraries to target
 target_link_libraries(PhysXDLL PUBLIC  	PhysXExtensions PhysX PhysXCooking	PhysXCommon	PhysXFoundation)
+
