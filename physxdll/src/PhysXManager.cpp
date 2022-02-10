@@ -249,6 +249,7 @@ ControlledScene* PhysXManager::createScene()
 	sceneDesc.filterCallback = this;
 	//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 
+	sceneDesc.flags |= PxSceneFlag::eENABLE_ENHANCED_DETERMINISM;
 	sceneDesc.flags |= PxSceneFlag::eENABLE_PCM;
 	sceneDesc.flags |= PxSceneFlag::eENABLE_STABILIZATION;
 	sceneDesc.flags |= PxSceneFlag::eENABLE_ACTIVE_ACTORS;
