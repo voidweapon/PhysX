@@ -244,6 +244,8 @@ ControlledScene* PhysXManager::createScene()
 
 	sceneDesc.cpuDispatcher = mCpuDispatcher;
 	sceneDesc.filterShader = contactReportFilterShader;
+	sceneDesc.broadPhaseType = PxBroadPhaseType::eSAP;
+	sceneDesc.filterCallback = this;
 	//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 
 	sceneDesc.flags |= PxSceneFlag::eENABLE_PCM;
@@ -304,7 +306,7 @@ PxFilterFlags	PhysXManager::pairFound(PxU32 pairID,
 	if (type0 == PxFilterObjectType::eRIGID_DYNAMIC) 
 	{
 		PxActor* _a0 = const_cast<PxActor*>(a0);
-		PxRigidBody* rigidBody0 = dynamic_cast<PxRigidBody*>(_a0);
+		PxRigidBody* rigidBody0 = static_cast<PxRigidBody*>(_a0);
 		PxRigidBodyFlags rigidBodyFlags0 = rigidBody0->getRigidBodyFlags();
 		if (rigidBodyFlags0 & PxRigidBodyFlag::eENABLE_CCD) 
 		{
@@ -318,7 +320,7 @@ PxFilterFlags	PhysXManager::pairFound(PxU32 pairID,
 	if (type1 == PxFilterObjectType::eRIGID_DYNAMIC)
 	{
 		PxActor* _a1 = const_cast<PxActor*>(a1);
-		PxRigidBody* rigidBody1 = dynamic_cast<PxRigidBody*>(_a1);
+		PxRigidBody* rigidBody1 = static_cast<PxRigidBody*>(_a1);
 		PxRigidBodyFlags rigidBodyFlags1 = rigidBody1->getRigidBodyFlags();
 		if (rigidBodyFlags1 & PxRigidBodyFlag::eENABLE_CCD)
 		{
