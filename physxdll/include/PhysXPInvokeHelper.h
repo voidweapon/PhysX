@@ -6,11 +6,29 @@
 
 using namespace physx;
 
+struct PxVec3P
+{
+public:
+	float x;
+	float y;
+	float z;
+};
+
+
+struct PxQuatP
+{
+public:
+	float x;
+	float y;
+	float z;
+	float w;
+};
+
 struct PxTransformP
 {
 public:
-	PxQuat q;
-	PxVec3 p;
+	PxQuatP q;
+	PxVec3P p;
 };
 
 struct PxActorSync
@@ -65,6 +83,8 @@ public:
 	PxShape* shape;
 };
 
+PxVec3 CopyToPxVec3(PxVec3P& from, PxVec3 to);
+PxQuat CopyToPxQuat(PxQuatP& from, PxQuat to);
 
 PxTransformP ConvertToP(PxTransform &pTm);
 PxTransform ConvertToPx(PxTransformP &pTm);

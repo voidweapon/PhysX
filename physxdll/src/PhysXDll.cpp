@@ -1,11 +1,13 @@
 #include "PhysXDll.h"
-
+#include "PhysXPInvokeHelper.h"
 
 extern "C" 
 {
 	PhysXManager* _manager = NULL;
 
 	PxTransformP DefaultTm;
+	PxVec3 vec3Cache[3];
+	PxQuat QuatCache;
 
 	PxRaycastHit raycastCache[65535];
 	PxSweepHit sweepCache[65535];
@@ -14,8 +16,8 @@ extern "C"
 	bool initPhysics(bool* collisionTable)
 	{
 		DefaultTm = PxTransformP();
-		DefaultTm.p = PxVec3();
-		DefaultTm.q = PxQuat();
+		DefaultTm.p = PxVec3P();
+		DefaultTm.q = PxQuatP();
 		DefaultTm.p.x = 0.0f;
 		DefaultTm.p.y = 0.0f;
 		DefaultTm.p.z = 0.0f;
@@ -23,6 +25,12 @@ extern "C"
 		DefaultTm.q.y = 0.0f;
 		DefaultTm.q.z = 0.0f;
 		DefaultTm.q.w = 0.0f;
+
+		for (size_t i = 0; i < 3; i++)
+		{
+			vec3Cache[i] = PxVec3(0, 0, 0);
+		}
+		QuatCache = PxQuat(0, 0, 0, 0);
 
 		_manager = new PhysXManager();
 
@@ -98,7 +106,11 @@ extern "C"
 	PxRigidActor* createRigidbody(ControlledScene* scene, PxTransformP tm, bool isStatic)
 	{
 		if (!_manager) return nullptr;
-		return scene->createRigidbody(ConvertToPx(tm), isStatic);
+
+		PxTransform t = ConvertToPx(tm);
+		PxRigidActor* ret =  scene->createRigidbody(t, isStatic);
+
+		return ret;
 	}
 
 	void destroyRigidActor(ControlledScene* scene, PxRigidActor* actor)
@@ -120,42 +132,47 @@ extern "C"
 		actor->detachShape(*shape);
 	}
 
-	PxShape* addBoxCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3 center ,PxVec3 size,  bool isTrigger)
+	PxShape* addBoxCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3P center ,PxVec3P size,  bool isTrigger)
 	{
 		if (!_manager) return nullptr;
 
 		return scene->addBoxCollider(actor, layer, center, size, isTrigger);
 	}
 
-	PxShape* addCapsuleCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3 center, float radius, float heigh, int direction, bool isTrigger)
+	PxShape* addCapsuleCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3P center, float radius, float heigh, int direction, bool isTrigger)
 	{
 		if (!_manager) return nullptr;
 
 		return scene->addCapsuleCollider(actor, layer, center, radius, heigh, direction, isTrigger);
 	}
 
-	PxShape* addSphereCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3 center, float radius, bool isTrigger)
+	PxShape* addSphereCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3P center, float radius, bool isTrigger)
 	{
 		if (!_manager) return nullptr;
 
 		return scene->addSphereCollider(actor, layer, center, radius, isTrigger);
 	}
 
-	void setActorPosition(PxRigidActor* actor, PxVec3 pos)
+	void setActorPosition(PxRigidActor* actor, PxVec3P pos)
 	{
 		if (!_manager) return;
 
 		PxTransform tm = actor->getGlobalPose();
-		tm.p = pos;
+		tm.p.x = pos.x;
+		tm.p.y = pos.y;
+		tm.p.z = pos.z;
 		actor->setGlobalPose(tm);
 	}
 
-	void setActorQuaternion(PxRigidActor* actor, PxQuat qua)
+	void setActorQuaternion(PxRigidActor* actor, PxQuatP qua)
 	{
 		if (!_manager) return;
 
 		PxTransform tm = actor->getGlobalPose();
-		tm.q = qua;
+		tm.q.x = qua.x;
+		tm.q.y = qua.y;
+		tm.q.z = qua.z;
+		tm.q.w = qua.w;
 		actor->setGlobalPose(tm);
 	}
 
@@ -183,22 +200,25 @@ extern "C"
 
 		rigidbody->setAngularDamping(angularDrag);
 	}
-	void setAngularVelocity(PxRigidActor* actor, PxVec3 angularVelocity)
+	void setAngularVelocity(PxRigidActor* actor, PxVec3P angularVelocity)
 	{
 		if (!_manager) return;
 		PxRigidBody* rigidbody = (PxRigidBody*)(actor);
 		if (!rigidbody) return;
 
-		rigidbody->setAngularVelocity(angularVelocity);
+		rigidbody->setAngularVelocity(PxVec3(angularVelocity.x, angularVelocity.y, angularVelocity.z));
 	}
-	void getAngularVelocity(PxRigidActor* actor, PxVec3& angularVelocity)
+	void getAngularVelocity(PxRigidActor* actor, PxVec3P& angularVelocity)
 	{
-		angularVelocity = PxVec3();
+		angularVelocity = PxVec3P();
 		if (!_manager) return;
 		PxRigidBody* rigidbody = (PxRigidBody*)(actor);
 		if (!rigidbody) return;
 
-		angularVelocity = rigidbody->getAngularVelocity();
+		PxVec3 v = rigidbody->getAngularVelocity();
+		angularVelocity.x = v.x;
+		angularVelocity.y = v.y;
+		angularVelocity.z = v.z;
 	}
 	void setUseGravity(PxRigidActor* actor, bool useGravity)
 	{
@@ -215,22 +235,25 @@ extern "C"
 		if (!rigidbody) return;
 		rigidbody->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, isKinematic);
 	}
-	void setVelocity(PxRigidActor* actor, PxVec3 velocity)
+	void setVelocity(PxRigidActor* actor, PxVec3P velocity)
 	{
 		if (!_manager) return;
 		PxRigidBody* rigidbody = (PxRigidBody*)(actor);
 		if (!rigidbody) return;
-		rigidbody->setLinearVelocity(velocity);
+		rigidbody->setLinearVelocity(PxVec3(velocity.x, velocity.y, velocity.z));
 	}
-	void getVelocity(PxRigidActor* actor, PxVec3& velocity)
+	void getVelocity(PxRigidActor* actor, PxVec3P& velocity)
 	{
-		velocity = PxVec3();
+		velocity = PxVec3P();
 
 		if (!_manager) return;
 		PxRigidBody* rigidbody = (PxRigidBody*)(actor);
 		if (!rigidbody) return;
 
-		velocity = rigidbody->getLinearVelocity();
+		PxVec3 v = rigidbody->getLinearVelocity();
+		velocity.x = v.x;
+		velocity.y = v.y;
+		velocity.z = v.z;
 	}
 	void setConstraints(PxRigidActor* actor, int constraints)
 	{
@@ -356,7 +379,7 @@ extern "C"
 	}
 
 
-	void addForce(void* actor, PxVec3 force, int mode)
+	void addForce(void* actor, PxVec3P force, int mode)
 	{
 		if (!_manager) return;
 
@@ -364,7 +387,7 @@ extern "C"
 		PxRigidDynamic* rigidbody = (PxRigidDynamic*)(actor);
 		if (!rigidbody) return;
 
-		rigidbody->addForce(force, (PxForceMode::Enum)mode);
+		rigidbody->addForce(PxVec3(force.x, force.y, force.z), (PxForceMode::Enum)mode);
 	}
 
 	void syncTransforms(ControlledScene* scene, PxActorSync* tranforms, uint32_t count)
@@ -395,26 +418,30 @@ extern "C"
 	}
 
 
-	bool raycast(ControlledScene* scene, PxVec3 origin, PxVec3 direction, float maxDistance, int layerMask)
+	bool raycast(ControlledScene* scene, PxVec3P origin, PxVec3P direction, float maxDistance, int layerMask)
 	{
 		if (!_manager) return false;
 
-		return scene->raycast(origin, direction, maxDistance, layerMask);
+		PxVec3 o = CopyToPxVec3(origin, vec3Cache[0]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[1]);
+		return scene->raycast(o, d, maxDistance, layerMask);
 	}
 
-	bool raycast2(ControlledScene* scene, PxVec3 origin, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask)
+	bool raycast2(ControlledScene* scene, PxVec3P origin, PxVec3P direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask)
 	{
 		if (!_manager) return false;
 
+		PxVec3 o = CopyToPxVec3(origin, vec3Cache[0]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[1]);
 		PxRaycastHit hitInfo;
-		bool hit =  scene->raycast(origin, direction, hitInfo, maxDistance, layerMask);
+		bool hit =  scene->raycast(o, d, hitInfo, maxDistance, layerMask);
 
 		hitInfoOut = ConvertToHitP(hitInfo);
 
 		return hit;
 	}
 
-	int raycastNonAlloc(ControlledScene* scene, PxVec3 origin, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
+	int raycastNonAlloc(ControlledScene* scene, PxVec3P origin, PxVec3P direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
 	{
 		if (!_manager) return 0;
 
@@ -423,8 +450,10 @@ extern "C"
 			maxCount = 65535;
 		}
 
+		PxVec3 o = CopyToPxVec3(origin, vec3Cache[0]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[1]);
 		PxRaycastBuffer rayHit(&raycastCache[0], maxCount);
-		PxU32 count = scene->raycastNonAlloc(origin, direction, rayHit, maxDistance, layerMask);
+		PxU32 count = scene->raycastNonAlloc(o, d, rayHit, maxDistance, layerMask);
 
 		for (PxU32 i = 0; i < count; i++)
 		{
@@ -435,27 +464,71 @@ extern "C"
 		return count;
 	}
 
-	bool sphereCast(ControlledScene* scene, PxVec3 origin, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask)
+	bool sphereCast(ControlledScene* scene, PxVec3P origin, float radius, PxVec3P direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask)
 	{
 		if (!_manager) return false;
+
+		PxVec3 o = CopyToPxVec3(origin, vec3Cache[0]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[1]);
+		PxRaycastHit hitInfo;
+		bool ret = scene->sphereCast(o, radius, d, hitInfo, maxDistance, layerMask);
+
+		hitInfoOut = ConvertToHitP(hitInfo);
+
+		return ret;
+	}
+	int sphereCastNonAlloc(ControlledScene* scene, PxVec3P origin, float radius, PxVec3P direction,  float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
+	{
+		if (!_manager) return 0;
+		if (maxCount > 65535)
+		{
+			maxCount = 65535;
+		}
+
+		PxVec3 o = CopyToPxVec3(origin, vec3Cache[0]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[1]);
+		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
+		PxU32 count = scene->sphereCast(o, radius, d, rayHit, maxDistance, layerMask);
+
+		for (PxU32 i = 0; i < count; i++)
+		{
+			PxSweepHit hitInfo = rayHit.getAnyHit(i);
+			hitInfoOut[i] = ConvertToHitP(hitInfo);
+		}
+
+		return count;
+	}
+
+	bool boxCast(ControlledScene* scene, PxVec3P center, PxVec3P halfExtents, PxVec3P direction, PxRaycastHitP& hitInfoOut, PxQuatP orientation, float maxDistance, int layerMask)
+	{
+		if (!_manager) return false;
+
+		PxVec3 c = CopyToPxVec3(center, vec3Cache[0]);
+		PxVec3 h = CopyToPxVec3(halfExtents, vec3Cache[1]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[2]);
+		CopyToPxQuat(orientation, QuatCache);
 
 		PxRaycastHit hitInfo;
-		bool ret = scene->sphereCast(origin, radius, direction, hitInfo, maxDistance, layerMask);
+		bool ret = scene->boxCast(c, h, d, hitInfo, QuatCache, maxDistance, layerMask);
 
 		hitInfoOut = ConvertToHitP(hitInfo);
 
 		return ret;
 	}
-	int sphereCastNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, PxVec3 direction,  float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
+	int boxCastNonAlloc(ControlledScene* scene, PxVec3P center, PxVec3P halfExtents, PxVec3P direction, PxQuatP orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
 	{
 		if (!_manager) return 0;
 		if (maxCount > 65535)
 		{
 			maxCount = 65535;
 		}
+		PxVec3 c = CopyToPxVec3(center, vec3Cache[0]);
+		PxVec3 h = CopyToPxVec3(halfExtents, vec3Cache[1]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[2]);
+		CopyToPxQuat(orientation, QuatCache);
 
 		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
-		PxU32 count = scene->sphereCast(origin, radius, direction, rayHit, maxDistance, layerMask);
+		PxU32 count = scene->boxCastNonAlloc(c, h, d, QuatCache, rayHit, maxDistance, layerMask);
 
 		for (PxU32 i = 0; i < count; i++)
 		{
@@ -466,48 +539,23 @@ extern "C"
 		return count;
 	}
 
-	bool boxCast(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHitP& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask)
+	bool capsuleCast(ControlledScene* scene, PxVec3P point1, PxVec3P point2, float radius, PxVec3P direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask)
 	{
 		if (!_manager) return false;
+		
+		PxVec3 p1 = CopyToPxVec3(point1, vec3Cache[0]);
+		PxVec3 p2 = CopyToPxVec3(point2, vec3Cache[1]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[2]);
 
 		PxRaycastHit hitInfo;
-		bool ret = scene->boxCast(center, halfExtents, direction, hitInfo, orientation, maxDistance, layerMask);
+
+		bool ret = scene->capsuleCast(p1, p2, radius, d, hitInfo, maxDistance, layerMask);
 
 		hitInfoOut = ConvertToHitP(hitInfo);
 
 		return ret;
 	}
-	int boxCastNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
-	{
-		if (!_manager) return 0;
-		if (maxCount > 65535)
-		{
-			maxCount = 65535;
-		}
-		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
-		PxU32 count = scene->boxCastNonAlloc(center, halfExtents, direction, orientation, rayHit, maxDistance, layerMask);
-
-		for (PxU32 i = 0; i < count; i++)
-		{
-			PxSweepHit hitInfo = rayHit.getAnyHit(i);
-			hitInfoOut[i] = ConvertToHitP(hitInfo);
-		}
-
-		return count;
-	}
-
-	bool capsuleCast(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask)
-	{
-		if (!_manager) return false;
-				PxRaycastHit hitInfo;
-
-		bool ret = scene->capsuleCast(point1, point2, radius, direction, hitInfo, maxDistance, layerMask);
-
-		hitInfoOut = ConvertToHitP(hitInfo);
-
-		return ret;
-	}
-	int capsuleCastNonAlloc(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
+	int capsuleCastNonAlloc(ControlledScene* scene, PxVec3P point1, PxVec3P point2, float radius, PxVec3P direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount)
 	{
 		if (!_manager) return 0;
 		if (maxCount > 65535)
@@ -515,8 +563,12 @@ extern "C"
 			maxCount = 65535;
 		}
 
+		PxVec3 p1 = CopyToPxVec3(point1, vec3Cache[0]);
+		PxVec3 p2 = CopyToPxVec3(point2, vec3Cache[1]);
+		PxVec3 d = CopyToPxVec3(direction, vec3Cache[2]);
+
 		PxSweepBuffer rayHit(&sweepCache[0], maxCount);
-		PxU32 count = scene->capsuleCastNonAlloc(point1, point2, radius, direction, rayHit, maxDistance, layerMask);
+		PxU32 count = scene->capsuleCastNonAlloc(p1, p2, radius, d, rayHit, maxDistance, layerMask);
 
 		for (PxU32 i = 0; i < count; i++)
 		{
@@ -526,7 +578,7 @@ extern "C"
 		return count;
 	}
 
-	int overlapSphereNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, int layerMask, PxActorShapeP* result, int maxCount)
+	int overlapSphereNonAlloc(ControlledScene* scene, PxVec3P origin, float radius, int layerMask, PxActorShapeP* result, int maxCount)
 	{
 		if (!_manager) return 0;
 
@@ -534,9 +586,9 @@ extern "C"
 		{
 			maxCount = 65535;
 		}
-
+		PxVec3 o = CopyToPxVec3(origin, vec3Cache[0]);
 		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		scene->overlapSphere(origin, radius, hitResult, layerMask);
+		scene->overlapSphere(o, radius, hitResult, layerMask);
 
 		size_t count = hitResult.nbTouches;
 		for (size_t i = 0; i < count; i++)
@@ -548,7 +600,7 @@ extern "C"
 		return count;
 	}
 
-	int overlapBoxNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents,  PxQuat orientation, int mask, PxActorShapeP* results, int maxCount)
+	int overlapBoxNonAlloc(ControlledScene* scene, PxVec3P center, PxVec3P halfExtents,  PxQuatP orientation, int mask, PxActorShapeP* results, int maxCount)
 	{
 		if (!_manager) return 0;
 
@@ -557,8 +609,12 @@ extern "C"
 			maxCount = 65535;
 		}
 
+		PxVec3 c = CopyToPxVec3(center, vec3Cache[0]);
+		PxVec3 h = CopyToPxVec3(halfExtents, vec3Cache[1]);
+		CopyToPxQuat(orientation, QuatCache);
+
 		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		scene->overlapBoxNonAlloc(center, halfExtents, orientation, hitResult, mask);
+		scene->overlapBoxNonAlloc(c, h, QuatCache, hitResult, mask);
 
 		size_t count = hitResult.nbTouches;
 		for (size_t i = 0; i < count; i++)
@@ -569,7 +625,7 @@ extern "C"
 
 		return count;
 	}
-	int overlapCapsuleNonAlloc(ControlledScene* scene, PxVec3 point0, PxVec3 point1,  float radius, int mask, PxActorShapeP* results, int maxCount)
+	int overlapCapsuleNonAlloc(ControlledScene* scene, PxVec3P point0, PxVec3P point1,  float radius, int mask, PxActorShapeP* results, int maxCount)
 	{
 		if (!_manager) return 0;
 
@@ -578,8 +634,10 @@ extern "C"
 			maxCount = 65535;
 		}
 
+		PxVec3 p1 = CopyToPxVec3(point0, vec3Cache[0]);
+		PxVec3 p2 = CopyToPxVec3(point1, vec3Cache[1]);
 		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		scene->overlapCapsuleNonAlloc(point0, point1, radius, hitResult, mask);
+		scene->overlapCapsuleNonAlloc(p1, p2, radius, hitResult, mask);
 
 		size_t count = hitResult.nbTouches;
 		for (size_t i = 0; i < count; i++)

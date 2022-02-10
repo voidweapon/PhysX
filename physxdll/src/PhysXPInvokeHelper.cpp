@@ -1,16 +1,59 @@
 #include "PhysXPInvokeHelper.h"
 
+PxVec3 CopyToPxVec3(PxVec3P& from, PxVec3 to)
+{
+	to.x = from.x;
+	to.y = from.y;
+	to.z = from.z;
+
+	return to;
+}
+PxQuat CopyToPxQuat(PxQuatP& from, PxQuat to)
+{
+	to.x = from.x;
+	to.y = from.y;
+	to.z = from.z;
+	to.w = from.w;
+
+	return to;
+}
+
 PxTransformP ConvertToP(PxTransform &pTm)
 {
 	PxTransformP tm;
-	tm.q = pTm.q;
-	tm.p = pTm.p;
+
+	PxVec3P p;
+	p.x = tm.p.x;
+	p.y = tm.p.y;
+	p.z = tm.p.z;
+
+	PxQuatP q;
+	q.x = tm.q.x;
+	q.y = tm.q.y;
+	q.z = tm.q.z;
+	q.w = tm.q.w;
+
+	tm.q = q;
+	tm.p = p;
+
 	return tm;
 }
 
 PxTransform ConvertToPx(PxTransformP &pTm)
 {
-	PxTransform tm(pTm.p, pTm.q);
+	PxTransform tm(PxIDENTITY::PxIdentity);
+
+	PxVec3P p = pTm.p;
+	PxQuatP q = pTm.q;
+	tm.p.x = p.x;
+	tm.p.y = p.y;
+	tm.p.z = p.z;
+
+	tm.q.x = q.x;
+	tm.q.y = q.y;
+	tm.q.z = q.z;
+	tm.q.w = q.w;
+
 	return tm;
 }
 

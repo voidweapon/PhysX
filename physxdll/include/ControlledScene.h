@@ -50,14 +50,14 @@ public:
 	PxRigidActor* changeRigidbodyStatic(PxRigidActor* actor, bool isStatic);
 	void destroyRigidActor(PxRigidActor* rigidActor);
 
-	PxShape* addBoxCollider(PxRigidActor* actor, int layer, PxVec3 center, PxVec3 size, bool isTrigger);
-	PxShape* addCapsuleCollider(PxRigidActor* actor, int layer, PxVec3 center, PxReal radius, PxReal heigh, int direction, bool isTrigger);
-	PxShape* addSphereCollider(PxRigidActor* actor, int layer, PxVec3 center, PxReal radius, bool isTrigger);
+	PxShape* addBoxCollider(PxRigidActor* actor, int layer, PxVec3P center, PxVec3P size, bool isTrigger);
+	PxShape* addCapsuleCollider(PxRigidActor* actor, int layer, PxVec3P center, PxReal radius, PxReal heigh, int direction, bool isTrigger);
+	PxShape* addSphereCollider(PxRigidActor* actor, int layer, PxVec3P center, PxReal radius, bool isTrigger);
 
 	void removeCollider(PxRigidActor* actor, PxShape* shape);
 
-	void setColliderPosition(PxRigidActor* rigidActor, PxVec3 pos);
-	void setColliderQuaternion(PxRigidActor* rigidActor, PxQuat qua);
+	void setColliderPosition(PxRigidActor* rigidActor, PxVec3P pos);
+	void setColliderQuaternion(PxRigidActor* rigidActor, PxQuatP qua);
 
 	/**
 	\param[int] array

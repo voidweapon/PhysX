@@ -1,5 +1,6 @@
 #include "ControlledScene.h"
 
+
 ControlledScene::ControlledScene(PxPhysics* physics, PxScene* scene, PxMaterial* defaultMaterial):
 	mPhysics(physics),
 	mScene(scene),
@@ -137,6 +138,7 @@ PxRigidActor* ControlledScene::createRigidbody(PxTransform tm, bool isStatic)
 		dynamic->setSolverIterationCounts(*(this->mDefaultSolverIterations), *(this->mDefaultSolverVelocityIterations));
 		actor = dynamic;
 	}
+
 	return actor;
 }
 
@@ -179,13 +181,12 @@ PxRigidActor* ControlledScene::changeRigidbodyStatic(PxRigidActor* actor, bool i
 	return newActor;
 }
 
-PxShape* ControlledScene::addBoxCollider(PxRigidActor* actor, int layer, PxVec3 center, PxVec3 size, bool isTrigger)
+PxShape* ControlledScene::addBoxCollider(PxRigidActor* actor, int layer, PxVec3P center, PxVec3P size, bool isTrigger)
 {
 	PxMaterial* material = mDefaultMaterial;
-	size *= 0.5f;
-	PxShape* shape = mPhysics->createShape(PxBoxGeometry(size.x, size.y, size.z), *material, true);
+	PxShape* shape = mPhysics->createShape(PxBoxGeometry(size.x * 0.5f, size.y * 0.5f, size.z * 0.5f), *material, true);
 
-	PxTransform relativePose(center);
+	PxTransform relativePose(center.x, center.y, center.z);
 	shape->setLocalPose(relativePose);
 
 	this->__initShape(shape, layer, isTrigger);
@@ -196,7 +197,7 @@ PxShape* ControlledScene::addBoxCollider(PxRigidActor* actor, int layer, PxVec3 
 	return shape;
 }
 
-PxShape* ControlledScene::addCapsuleCollider(PxRigidActor* actor, int layer, PxVec3 center, PxReal radius, PxReal heigh, int direction, bool isTrigger)
+PxShape* ControlledScene::addCapsuleCollider(PxRigidActor* actor, int layer, PxVec3P center, PxReal radius, PxReal heigh, int direction, bool isTrigger)
 {
 	PxMaterial* material = mDefaultMaterial;
 	heigh = (heigh - radius * 2.0f) * 0.5f;
@@ -206,19 +207,19 @@ PxShape* ControlledScene::addCapsuleCollider(PxRigidActor* actor, int layer, PxV
 	if (direction == 0)
 	{
 		//X-axes
-		PxTransform relativePose_X(center);
+		PxTransform relativePose_X(center.x, center.y, center.z);
 		shape->setLocalPose(relativePose_X);
 	}
 	else if(direction == 1)
 	{
 		//Y-axes
-		PxTransform relativePose_Y(center, PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
+		PxTransform relativePose_Y(center.x, center.y, center.z, PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
 		shape->setLocalPose(relativePose_Y);
 	}
 	else if (direction == 2)
 	{
 		//Z-axes
-		PxTransform relativePose_Z(center, PxQuat(PxHalfPi, PxVec3(0, 1, 0)));
+		PxTransform relativePose_Z(center.x, center.y, center.z, PxQuat(PxHalfPi, PxVec3(0, 1, 0)));
 		shape->setLocalPose(relativePose_Z);
 	}
 
@@ -227,12 +228,12 @@ PxShape* ControlledScene::addCapsuleCollider(PxRigidActor* actor, int layer, PxV
 	return shape;
 }
 
-PxShape* ControlledScene::addSphereCollider(PxRigidActor* actor, int layer, PxVec3 center, PxReal radius, bool isTrigger)
+PxShape* ControlledScene::addSphereCollider(PxRigidActor* actor, int layer, PxVec3P center, PxReal radius, bool isTrigger)
 {
 	PxMaterial* material = mDefaultMaterial;
 	PxShape* shape = PxRigidActorExt::createExclusiveShape(*actor, PxSphereGeometry(radius), *material);
 
-	PxTransform relativePose(center);
+	PxTransform relativePose(center.x, center.y, center.z);
 	shape->setLocalPose(relativePose);
 
 	this->__initShape(shape, layer, isTrigger);
@@ -261,17 +262,19 @@ void ControlledScene::removeCollider(PxRigidActor* actor, PxShape* shape)
 
 
 //=================================== Change Single RigidActror Transform ===================================
-void ControlledScene::setColliderPosition(PxRigidActor* rigidActor, PxVec3 pos)
+void ControlledScene::setColliderPosition(PxRigidActor* rigidActor, PxVec3P pos)
 {
 	if (!mScene || !rigidActor)
 	{
 		return;
 	}
 	PxTransform tm = rigidActor->getGlobalPose();
-	tm.p = pos;
+	tm.p.x = pos.x;
+	tm.p.y = pos.y;
+	tm.p.z = pos.z;
 	rigidActor->setGlobalPose(tm);
 }
-void ControlledScene::setColliderQuaternion(PxRigidActor* rigidActor, PxQuat qua)
+void ControlledScene::setColliderQuaternion(PxRigidActor* rigidActor, PxQuatP qua)
 {
 	if (!mScene || !rigidActor)
 	{
@@ -279,7 +282,10 @@ void ControlledScene::setColliderQuaternion(PxRigidActor* rigidActor, PxQuat qua
 	}
 
 	PxTransform tm = rigidActor->getGlobalPose();
-	tm.q = qua;
+	tm.q.x = qua.x;
+	tm.q.y = qua.y;
+	tm.q.z = qua.z;
+	tm.q.w = qua.w;
 	rigidActor->setGlobalPose(tm);
 }
 //===================================
@@ -291,8 +297,17 @@ void ControlledScene::syncTransforms(PxActorSync* tranforms, uint32_t count)
 	{
 		PxRigidActor* actor = tranforms[i].actor;
 		PxTransform tm = actor->getGlobalPose();
-		tm.p = tranforms[i].tm.p;
-		tm.q = tranforms[i].tm.q;
+		PxVec3P p = tranforms[i].tm.p;
+		PxQuatP q = tranforms[i].tm.q;
+		tm.p.x = p.x;
+		tm.p.y = p.y;
+		tm.p.z = p.z;
+
+		tm.q.x = q.x;
+		tm.q.y = q.y;
+		tm.q.z = q.z;
+		tm.q.w = q.w;
+
 		actor->setGlobalPose(tm);
 	}
 }
@@ -314,8 +329,20 @@ void ControlledScene::fetchTransforms(PxActorSync* tranforms, uint32_t &count)
 		actorSync.actor = rigidActor;
 		PxTransform tm = rigidActor->getGlobalPose();
 		actorSync.tm = PxTransformP();
-		actorSync.tm.p = tm.p;
-		actorSync.tm.q = tm.q;
+
+		PxVec3P p;
+		p.x = tm.p.x;
+		p.y = tm.p.y;
+		p.z = tm.p.z;
+
+		PxQuatP q;
+		q.x = tm.q.x;
+		q.y = tm.q.y;
+		q.z = tm.q.z;
+		q.w = tm.q.w;
+
+		actorSync.tm.p = p;
+		actorSync.tm.q = q;
 
 		tranforms[rigidActorCount++] = actorSync;
 	}

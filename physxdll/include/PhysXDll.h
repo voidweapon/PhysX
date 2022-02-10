@@ -50,26 +50,26 @@ extern "C"
 
 
 #pragma region set Actor Property
-	DllExport void setActorPosition(PxRigidActor* actor, PxVec3 pos);
-	DllExport void setActorQuaternion(PxRigidActor* actor, PxQuat qua);
+	DllExport void setActorPosition(PxRigidActor* actor, PxVec3P pos);
+	DllExport void setActorQuaternion(PxRigidActor* actor, PxQuatP qua);
 	DllExport void setMass(PxRigidActor* actor, PxReal mass);
 	DllExport void setDrag(PxRigidActor* actor, PxReal drag);
 	DllExport void setAngularDrag(PxRigidActor* actor, PxReal angularDrag);
-	DllExport void setAngularVelocity(PxRigidActor* actor, PxVec3 angularVelocity);
-	DllExport void getAngularVelocity(PxRigidActor* actor, PxVec3& angularVelocity);
+	DllExport void setAngularVelocity(PxRigidActor* actor, PxVec3P angularVelocity);
+	DllExport void getAngularVelocity(PxRigidActor* actor, PxVec3P& angularVelocity);
 	DllExport void setUseGravity(PxRigidActor* actor, bool useGravity);
 	DllExport void setIsKinematic(PxRigidActor* actor, bool isKinematic);
-	DllExport void setVelocity(PxRigidActor* actor, PxVec3 velocity);
-	DllExport void getVelocity(PxRigidActor* actor, PxVec3& velocity);
+	DllExport void setVelocity(PxRigidActor* actor, PxVec3P velocity);
+	DllExport void getVelocity(PxRigidActor* actor, PxVec3P& velocity);
 	DllExport void setConstraints(PxRigidActor* actor, int constraints);
 	DllExport void setCollisionDetectionMode(PxRigidActor* actor, int collisionDetectionMode);
 	DllExport void setLayer(PxRigidActor* actor, int layer);
 
 #pragma region Collider
 	DllExport void removeCollider(PxRigidActor* actor, PxShape* shape);
-	DllExport PxShape* addBoxCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3 center, PxVec3 size, bool isTrigger);
-	DllExport PxShape* addCapsuleCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3 center, float radius, float heigh, int direction, bool isTrigger);
-	DllExport PxShape* addSphereCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3 center, float radius, bool isTrigger);
+	DllExport PxShape* addBoxCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3P center, PxVec3P size, bool isTrigger);
+	DllExport PxShape* addCapsuleCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3P center, float radius, float heigh, int direction, bool isTrigger);
+	DllExport PxShape* addSphereCollider(ControlledScene* scene, PxRigidActor* actor, int layer, PxVec3P center, float radius, bool isTrigger);
 #pragma endregion
 
 
@@ -85,27 +85,27 @@ extern "C"
 
 
 #pragma region Scene Query
-	DllExport bool raycast(ControlledScene* scene, PxVec3 origin, PxVec3 direction, float maxDistance, int layerMask);
-	DllExport bool raycast2(ControlledScene* scene, PxVec3 origin, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
-	DllExport int raycastNonAlloc(ControlledScene* scene, PxVec3 origin, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
+	DllExport bool raycast(ControlledScene* scene, PxVec3P origin, PxVec3P direction, float maxDistance, int layerMask);
+	DllExport bool raycast2(ControlledScene* scene, PxVec3P origin, PxVec3P direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
+	DllExport int raycastNonAlloc(ControlledScene* scene, PxVec3P origin, PxVec3P direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 	
-	DllExport bool sphereCast(ControlledScene* scene, PxVec3 origin, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
-	DllExport int sphereCastNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
+	DllExport bool sphereCast(ControlledScene* scene, PxVec3P origin, float radius, PxVec3P direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
+	DllExport int sphereCastNonAlloc(ControlledScene* scene, PxVec3P origin, float radius, PxVec3P direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
-	DllExport bool boxCast(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHitP& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
-	DllExport int boxCastNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
+	DllExport bool boxCast(ControlledScene* scene, PxVec3P center, PxVec3P halfExtents, PxVec3P direction, PxRaycastHitP& hitInfoOut, PxQuatP orientation, float maxDistance, int layerMask);
+	DllExport int boxCastNonAlloc(ControlledScene* scene, PxVec3P center, PxVec3P halfExtents, PxVec3P direction, PxQuatP orientation, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
-	DllExport bool capsuleCast(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
-	DllExport int capsuleCastNonAlloc(ControlledScene* scene, PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
+	DllExport bool capsuleCast(ControlledScene* scene, PxVec3P point1, PxVec3P point2, float radius, PxVec3P direction, PxRaycastHitP& hitInfoOut, float maxDistance, int layerMask);
+	DllExport int capsuleCastNonAlloc(ControlledScene* scene, PxVec3P point1, PxVec3P point2, float radius, PxVec3P direction, float maxDistance, int layerMask, PxRaycastHitP* hitInfoOut, int maxCount);
 
-	DllExport int overlapSphereNonAlloc(ControlledScene* scene, PxVec3 origin, float radius, int layerMask, PxActorShapeP* result, int maxCount);
-	DllExport int overlapBoxNonAlloc(ControlledScene* scene, PxVec3 center, PxVec3 halfExtents,  PxQuat orientation, int mask, PxActorShapeP* results, int maxCount);
-	DllExport int overlapCapsuleNonAlloc(ControlledScene* scene, PxVec3 point0, PxVec3 point1,  float radius, int mask, PxActorShapeP* results, int maxCount);
+	DllExport int overlapSphereNonAlloc(ControlledScene* scene, PxVec3P origin, float radius, int layerMask, PxActorShapeP* result, int maxCount);
+	DllExport int overlapBoxNonAlloc(ControlledScene* scene, PxVec3P center, PxVec3P halfExtents,  PxQuatP orientation, int mask, PxActorShapeP* results, int maxCount);
+	DllExport int overlapCapsuleNonAlloc(ControlledScene* scene, PxVec3P point0, PxVec3P point1,  float radius, int mask, PxActorShapeP* results, int maxCount);
 #pragma endregion
 
 
 #pragma region Force
-	DllExport void addForce(void* actor, PxVec3 force, int mode);
+	DllExport void addForce(void* actor, PxVec3P force, int mode);
 #pragma endregion
 
 #ifdef __cplusplus
