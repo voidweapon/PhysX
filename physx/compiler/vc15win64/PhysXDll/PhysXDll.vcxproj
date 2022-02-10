@@ -215,7 +215,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>Xcopy $(TargetPath) D:\Projects\projectjclient\Libs\PhysX\   /y</Command>
+      <Command>Xcopy $(TargetPath) D:\Projects\projectjclient\Libs\PhysX\   /y /f</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
