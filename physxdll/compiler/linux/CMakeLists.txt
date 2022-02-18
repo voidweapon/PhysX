@@ -11,7 +11,7 @@ ENDIF()
 
 STRING(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWERCASE)
 
-PROJECT(PhysXDLL C CXX)
+PROJECT(PhysXDll C CXX)
 
 #TODO: Fix warnings
 SET(CLANG_WARNINGS "-ferror-limit=0 -Wall -Wextra  -Wstrict-aliasing=2 -Weverything -Wno-documentation-deprecated-sync -Wno-documentation-unknown-command -Wno-gnu-anonymous-struct -Wno-undef -Wno-unused-function -Wno-nested-anon-types -Wno-float-equal -Wno-padded -Wno-weak-vtables -Wno-cast-align -Wno-conversion -Wno-missing-noreturn -Wno-missing-variable-declarations -Wno-shift-sign-overflow -Wno-covered-switch-default -Wno-exit-time-destructors -Wno-global-constructors -Wno-missing-prototypes -Wno-unreachable-code -Wno-unused-macros -Wno-unused-member-function -Wno-used-but-marked-unused -Wno-weak-template-vtables -Wno-deprecated -Wno-non-virtual-dtor -Wno-invalid-noreturn -Wno-return-type-c-linkage -Wno-reserved-id-macro -Wno-c++98-compat-pedantic -Wno-unused-local-typedef -Wno-old-style-cast -Wno-newline-eof -Wno-unused-private-field -Wno-format-nonliteral -Wno-implicit-fallthrough -Wno-undefined-reinterpret-cast -Wno-disabled-macro-expansion -Wno-zero-as-null-pointer-constant -Wno-shadow -Wno-unknown-warning-option")
@@ -50,11 +50,11 @@ file(GLOB PHYSXDLL_SOURCES
 # include target head file
 include_directories(../../include)
 
-add_library(PhysXDLL SHARED ${PHYSXDLL_SOURCES})
+add_library(PhysXDll SHARED ${PHYSXDLL_SOURCES})
 
 # Call into PhysX CMake scritps
 ADD_SUBDIRECTORY(${PHYSX_ROOT_DIR}/compiler/public ${CMAKE_CURRENT_BINARY_DIR}/physx)
 
 # Add physx libraries to target
-target_link_libraries(PhysXDLL PUBLIC  	PhysXExtensions PhysX PhysXCooking	PhysXCommon	PhysXFoundation)
+target_link_libraries(PhysXDll PUBLIC  	PhysXExtensions PhysX PhysXCooking	PhysXCommon	PhysXFoundation)
 
