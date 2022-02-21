@@ -45,6 +45,7 @@ public: // Implement PxQueryFilterCallback
 public:
 	void release();
 	void stepPhysicsScene(PxReal dt);
+	PxScene* GetScene() { return mScene; }
 
 	PxRigidActor* createRigidbody(PxTransform tm, bool isStatic);
 	PxRigidActor* changeRigidbodyStatic(PxRigidActor* actor, bool isStatic);
@@ -83,27 +84,27 @@ public:
 	void fetchTriggers(PxTrigger* triggers, uint32_t &count);
 
 	bool raycast(PxVec3& origin, PxVec3& direction, PxReal maxDistance, PxI32 layerMask);
-	bool raycast(PxVec3 origin, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask);
-	PxU32 raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask);
+	bool raycast(PxVec3& origin, PxVec3& direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask);
+	PxU32 raycastNonAlloc(PxVec3& origin, PxVec3& direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask);
 
-	bool sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask);
-	PxU32 sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
+	bool sphereCast(PxVec3& origin, float radius, PxVec3& direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask);
+	PxU32 sphereCast(PxVec3& origin, float radius, PxVec3& direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
 
-	bool boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHit& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask);
-	PxU32 boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask);
+	bool boxCast(PxVec3& center, PxVec3& halfExtents, PxVec3& direction, PxRaycastHit& hitInfoOut, PxQuat& orientation, float maxDistance, int layerMask);
+	PxU32 boxCastNonAlloc(PxVec3& center, PxVec3& halfExtents, PxVec3& direction, PxQuat &orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask);
 
-	bool capsuleCast(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask);
-	PxU32 capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
+	bool capsuleCast(PxVec3& point1, PxVec3& point2, float radius, PxVec3& direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask);
+	PxU32 capsuleCastNonAlloc(PxVec3& point1, PxVec3& point2, float radius, PxVec3& direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask);
 
-	bool overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer& result, int layerMask);
-	bool overlapBoxNonAlloc(PxVec3 center, PxVec3 halfExtents, PxQuat orientation, PxOverlapBuffer& result, int layerMask);
-	bool overlapCapsuleNonAlloc(PxVec3 point0, PxVec3 point1, PxReal radius, PxOverlapBuffer& result, int layerMask);
+	PxU32 overlapSphere(PxVec3& origin, float radius, PxOverlapBuffer& result, int layerMask);
+	PxU32 overlapBoxNonAlloc(PxVec3& center, PxVec3& halfExtents, PxQuat& orientation, PxOverlapBuffer& result, int layerMask);
+	PxU32 overlapCapsuleNonAlloc(PxVec3& point0, PxVec3& point1, PxReal radius, PxOverlapBuffer& result, int layerMask);
 
 private:
 	void __clearCache();
 	void __initShape(PxShape* shape, int layer, bool isTrigger);
-	bool __sweep(PxGeometry& geometry, PxTransform& pose, PxVec3 direction, PxSweepBuffer& rayHit, float maxDistance, int layerMask, bool castAll);
-	bool __overlap(PxGeometry& geometry, PxTransform& pose, PxOverlapBuffer& result, int layerMask, bool castAll);
+	bool __sweep(PxGeometry& geometry, PxTransform& pose, PxVec3& direction, PxSweepBuffer& rayHit, float maxDistance, int layerMask, bool castAll);
+	PxU32 __overlap(PxGeometry& geometry, PxTransform& pose, PxOverlapBuffer& result, int layerMask, bool castAll);
 	void __sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit* hitInfo);
 private:
 	std::vector<PxCollision>		mListCollision;

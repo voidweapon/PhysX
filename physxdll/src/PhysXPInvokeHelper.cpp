@@ -1,6 +1,6 @@
 #include "PhysXPInvokeHelper.h"
 
-PxVec3 CopyToPxVec3(PxVec3P& from, PxVec3 to)
+PxVec3 CopyToPxVec3(PxVec3P& from, PxVec3& to)
 {
 	to.x = from.x;
 	to.y = from.y;
@@ -8,7 +8,7 @@ PxVec3 CopyToPxVec3(PxVec3P& from, PxVec3 to)
 
 	return to;
 }
-PxQuat CopyToPxQuat(PxQuatP& from, PxQuat to)
+PxQuat CopyToPxQuat(PxQuatP& from, PxQuat& to)
 {
 	to.x = from.x;
 	to.y = from.y;

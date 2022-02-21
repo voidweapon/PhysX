@@ -587,17 +587,17 @@ extern "C"
 			maxCount = 65535;
 		}
 		PxVec3 o = CopyToPxVec3(origin, vec3Cache[0]);
-		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		scene->overlapSphere(o, radius, hitResult, layerMask);
+		PxOverlapBuffer hitResult(&overlapCache[0], maxCount);
+		PxU32 number = scene->overlapSphere(o, radius, hitResult, layerMask);
 
-		size_t count = hitResult.nbTouches;
-		for (size_t i = 0; i < count; i++)
+		//size_t count = hitResult.nbTouches;
+		for (PxU32 i = 0; i < number; i++)
 		{
 			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
 			result[i] = ConvertToASP(hitInfo);
 		}
 
-		return count;
+		return number;
 	}
 
 	int overlapBoxNonAlloc(ControlledScene* scene, PxVec3P center, PxVec3P halfExtents,  PxQuatP orientation, int mask, PxActorShapeP* results, int maxCount)
@@ -609,21 +609,43 @@ extern "C"
 			maxCount = 65535;
 		}
 
-		PxVec3 c = CopyToPxVec3(center, vec3Cache[0]);
-		PxVec3 h = CopyToPxVec3(halfExtents, vec3Cache[1]);
-		CopyToPxQuat(orientation, QuatCache);
+		//PxVec3 c = CopyToPxVec3(center, vec3Cache[0]);
+		//PxVec3 h = CopyToPxVec3(halfExtents, vec3Cache[1]);
+		//CopyToPxQuat(orientation, QuatCache);
 
-		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		scene->overlapBoxNonAlloc(c, h, QuatCache, hitResult, mask);
+		PxVec3 c(center.x, center.y, center.z);
+		PxVec3 h(halfExtents.x, halfExtents.y, halfExtents.z);
+		PxQuat q(orientation.x, orientation.y, orientation.z, orientation.w);
 
-		size_t count = hitResult.nbTouches;
-		for (size_t i = 0; i < count; i++)
+		//PxScene* _s = scene->GetScene();
+		//PxScene& s = *_s;
+		//PxSceneWriteLock scopedLock(s);
+
+		PxOverlapBuffer hitResult(&overlapCache[0], maxCount);
+		//PxOverlapBuffer hitResult;
+
+
+		//int count = 0;
+		//PxBoxGeometry box(PxVec3(halfExtents.x, halfExtents.y, halfExtents.z));
+		////PxTransform tm(center.x, center.y, center.z, PxQuat(orientation.x, orientation.y, orientation.z, orientation.w));
+		//if (s.overlap(
+		//	box,
+		//	PxTransform(center.x, center.y, center.z, PxQuat(orientation.x, orientation.y, orientation.z, orientation.w)),
+		//	hitResult,
+		//	PxQueryFilterData(PxQueryFlag::eNO_BLOCK | PxQueryFlag::eDYNAMIC | PxQueryFlag::ePREFILTER)))
+		//{
+		//	count = 1;
+		//}
+
+		PxU32 number = scene->overlapBoxNonAlloc(c, h, q, hitResult, mask);
+
+		for (PxU32 i = 0; i < number; i++)
 		{
 			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
 			results[i] = ConvertToASP(hitInfo);
 		}
 
-		return count;
+		return number;
 	}
 	int overlapCapsuleNonAlloc(ControlledScene* scene, PxVec3P point0, PxVec3P point1,  float radius, int mask, PxActorShapeP* results, int maxCount)
 	{
@@ -636,17 +658,17 @@ extern "C"
 
 		PxVec3 p1 = CopyToPxVec3(point0, vec3Cache[0]);
 		PxVec3 p2 = CopyToPxVec3(point1, vec3Cache[1]);
-		PxOverlapBuffer hitResult(overlapCache, maxCount);
-		scene->overlapCapsuleNonAlloc(p1, p2, radius, hitResult, mask);
+		PxOverlapBuffer hitResult(&overlapCache[0], maxCount);
+		PxU32 number = scene->overlapCapsuleNonAlloc(p1, p2, radius, hitResult, mask);
 
-		size_t count = hitResult.nbTouches;
-		for (size_t i = 0; i < count; i++)
+		//size_t count = hitResult.nbTouches;
+		for (PxU32 i = 0; i < number; i++)
 		{
 			PxOverlapHit hitInfo = hitResult.getAnyHit(i);
 			results[i] = ConvertToASP(hitInfo);
 		}
 
-		return count;
+		return number;
 	}
 }
 

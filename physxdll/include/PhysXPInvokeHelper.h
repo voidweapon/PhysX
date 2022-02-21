@@ -83,8 +83,8 @@ public:
 	PxShape* shape;
 };
 
-PxVec3 CopyToPxVec3(PxVec3P& from, PxVec3 to);
-PxQuat CopyToPxQuat(PxQuatP& from, PxQuat to);
+PxVec3 CopyToPxVec3(PxVec3P& from, PxVec3& to);
+PxQuat CopyToPxQuat(PxQuatP& from, PxQuat& to);
 
 PxTransformP ConvertToP(PxTransform &pTm);
 PxTransform ConvertToPx(PxTransformP &pTm);

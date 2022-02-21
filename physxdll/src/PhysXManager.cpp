@@ -69,9 +69,9 @@ PhysXManager::PhysXManager():
 	mCpuDispatcher(NULL),
 	mPvd(NULL),
 	mTransport(NULL),
-	mSleepThreshold(0.005),
+	mSleepThreshold(0.005f),
 	mBounceThreshold(2),
-	mDefaultContactOffset(0.01),
+	mDefaultContactOffset(0.01f),
 	mDefaultSolverIterations(6),
 	mDefaultSolverVelocityIterations(1),
 	mDefaultFrictionType(PxFrictionType::ePATCH)
@@ -231,7 +231,8 @@ void PhysXManager::createPvdConnection()
 	if (mTransport == NULL)
 		return;
 
-	mPvdFlags = physx::PxPvdInstrumentationFlag::eDEBUG /*| PxPvdInstrumentationFlag::ePROFILE*/;
+	//mPvdFlags = physx::PxPvdInstrumentationFlag::eDEBUG /*| PxPvdInstrumentationFlag::ePROFILE*/;
+	mPvdFlags = physx::PxPvdInstrumentationFlag::eALL;
 	mPvd = physx::PxCreatePvd(*mFoundation);
 	mPvd->connect(*mTransport, mPvdFlags);
 #endif
@@ -242,10 +243,11 @@ ControlledScene* PhysXManager::createScene()
 
 	PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(0.0f, -9.81f, 0.0f);
+	sceneDesc.bounceThresholdVelocity = 2.0f;
 
 	sceneDesc.cpuDispatcher = mCpuDispatcher;
-	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.broadPhaseType = PxBroadPhaseType::eSAP;
+	sceneDesc.filterShader = contactReportFilterShader;
 	sceneDesc.filterCallback = this;
 	//sceneDesc.filterShader = PxDefaultSimulationFilterShader;
 

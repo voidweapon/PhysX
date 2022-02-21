@@ -387,7 +387,7 @@ bool ControlledScene::raycast(PxVec3&  origin, PxVec3&  direction, PxReal maxDis
 	return hit;
 }
 
-bool ControlledScene::raycast(PxVec3 origin, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask)
+bool ControlledScene::raycast(PxVec3& origin, PxVec3& direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask)
 {
 	PxRaycastBuffer rayHit;
 
@@ -407,7 +407,7 @@ bool ControlledScene::raycast(PxVec3 origin, PxVec3 direction, PxRaycastHit& hit
 	return hit;
 }
 
-PxU32 ControlledScene::raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask)
+PxU32 ControlledScene::raycastNonAlloc(PxVec3& origin, PxVec3& direction, PxRaycastBuffer& rayHit, float maxDistance, int layerMask)
 {
 	PxHitFlags hitFlags = (PxHitFlags)(PxHitFlag::eDEFAULT);
 	PxFilterData filterData;
@@ -421,7 +421,7 @@ PxU32 ControlledScene::raycastNonAlloc(PxVec3 origin, PxVec3 direction, PxRaycas
 }
 
 
-bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask)
+bool ControlledScene::sphereCast(PxVec3& origin, float radius, PxVec3& direction, PxRaycastHit& hitInfo, float maxDistance, int layerMask)
 {
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -439,7 +439,7 @@ bool ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, 
 
 	return ret;
 }
-PxU32 ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
+PxU32 ControlledScene::sphereCast(PxVec3& origin, float radius, PxVec3& direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
 {	
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -452,7 +452,7 @@ PxU32 ControlledScene::sphereCast(PxVec3 origin, float radius, PxVec3 direction,
 	return hitInfo.getNbAnyHits();
 }
 
-bool ControlledScene::boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxRaycastHit& hitInfoOut, PxQuat orientation, float maxDistance, int layerMask)
+bool ControlledScene::boxCast(PxVec3& center, PxVec3& halfExtents, PxVec3& direction, PxRaycastHit& hitInfoOut, PxQuat& orientation, float maxDistance, int layerMask)
 {
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -470,7 +470,7 @@ bool ControlledScene::boxCast(PxVec3 center, PxVec3 halfExtents, PxVec3 directio
 
 	return ret;
 }
-PxU32 ControlledScene::boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3 direction, PxQuat orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask)
+PxU32 ControlledScene::boxCastNonAlloc(PxVec3& center, PxVec3& halfExtents, PxVec3& direction, PxQuat& orientation, PxSweepBuffer& hitInfo,float maxDistance, int layerMask)
 {
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -483,7 +483,7 @@ PxU32 ControlledScene::boxCastNonAlloc(PxVec3 center, PxVec3 halfExtents, PxVec3
 	return hitInfo.getNbAnyHits();
 }
 
-bool ControlledScene::capsuleCast(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask)
+bool ControlledScene::capsuleCast(PxVec3& point1, PxVec3& point2, float radius, PxVec3& direction, PxRaycastHit& hitInfoOut, float maxDistance, int layerMask)
 {
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -506,7 +506,7 @@ bool ControlledScene::capsuleCast(PxVec3 point1, PxVec3 point2, float radius, Px
 
 	return ret;
 }
-PxU32 ControlledScene::capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float radius, PxVec3 direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
+PxU32 ControlledScene::capsuleCastNonAlloc(PxVec3& point1, PxVec3& point2, float radius, PxVec3& direction, PxSweepBuffer& hitInfo, float maxDistance, int layerMask)
 {
 	/* 
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -525,7 +525,7 @@ PxU32 ControlledScene::capsuleCastNonAlloc(PxVec3 point1, PxVec3 point2, float r
 	return hitInfo.getNbAnyHits();
 }
 
-bool ControlledScene::overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer& result, int layerMask)
+PxU32 ControlledScene::overlapSphere(PxVec3& origin, float radius, PxOverlapBuffer& result, int layerMask)
 {
 	/* 
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -533,9 +533,9 @@ bool ControlledScene::overlapSphere(PxVec3 origin, float radius, PxOverlapBuffer
 	*/
 	PxSphereGeometry sphere(radius);
 	PxTransform tm(origin);
-	return this->__overlap(sphere, tm, result, layerMask, false);
+	return this->__overlap(sphere, tm, result, layerMask, true);
 }
-bool ControlledScene::overlapBoxNonAlloc(PxVec3 center, PxVec3 halfExtents, PxQuat orientation, PxOverlapBuffer& result, int layerMask)
+PxU32 ControlledScene::overlapBoxNonAlloc(PxVec3& center, PxVec3& halfExtents, PxQuat& orientation, PxOverlapBuffer& result, int layerMask)
 {
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -545,7 +545,7 @@ bool ControlledScene::overlapBoxNonAlloc(PxVec3 center, PxVec3 halfExtents, PxQu
 	PxTransform tm(center, orientation);
 	return this->__overlap(box, tm, result, layerMask, true);
 }
-bool ControlledScene::overlapCapsuleNonAlloc(PxVec3 point0, PxVec3 point1, PxReal radius, PxOverlapBuffer& result, int layerMask)
+PxU32 ControlledScene::overlapCapsuleNonAlloc(PxVec3& point0, PxVec3& point1, PxReal radius, PxOverlapBuffer& result, int layerMask)
 {
 	/*
 	* Issue #471 https://github.com/NVIDIAGameWorks/PhysX/issues/471
@@ -561,7 +561,7 @@ bool ControlledScene::overlapCapsuleNonAlloc(PxVec3 point0, PxVec3 point1, PxRea
 }
 
 
-bool ControlledScene::__sweep(PxGeometry& geometry, PxTransform& pose, PxVec3 direction, PxSweepBuffer& rayHit, float maxDistance, int layerMask, bool castAll)
+bool ControlledScene::__sweep(PxGeometry& geometry, PxTransform& pose, PxVec3& direction, PxSweepBuffer& rayHit, float maxDistance, int layerMask, bool castAll)
 {
 	PxHitFlags hitFlags = (PxHitFlags)(PxHitFlag::eDEFAULT);
 	PxFilterData filterData;
@@ -578,22 +578,28 @@ bool ControlledScene::__sweep(PxGeometry& geometry, PxTransform& pose, PxVec3 di
 }
 
 
-bool ControlledScene::__overlap(PxGeometry& geometry, PxTransform& pose, PxOverlapBuffer& result, int layerMask, bool castAll)
+PxU32 ControlledScene::__overlap(PxGeometry& geometry, PxTransform& pose, PxOverlapBuffer& result, int layerMask, bool castAll)
 {
 
-	PxFilterData filterData;
+	PxFilterData filterData(layerMask, 0,0,0);
 	filterData.word0 = layerMask;
 	//overlap can't ues PxQueryHitType::eBLOCK
-	//filterData.word1 = castAll ? 1 : 0;
+	filterData.word1 = castAll ? 1 : 0;
 	//PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER;
-	PxQueryFlags flags = PxQueryFlag::eDYNAMIC | PxQueryFlag::eSTATIC;
-	if (!castAll)
-	{
-		flags |= PxQueryFlag::eANY_HIT;
-	}
+	PxQueryFlags flags = PxQueryFlag::eNO_BLOCK | PxQueryFlag::eSTATIC | PxQueryFlag::eDYNAMIC | PxQueryFlag::ePREFILTER;
+	//if (!castAll)
+	//{
+	//	flags |= PxQueryFlag::eANY_HIT;
+	//}
 	PxQueryFilterData Queryfilter(filterData, flags);
 
-	return mScene->overlap(geometry, pose, result, Queryfilter, this);
+	bool ret = false;
+	if (mScene->overlap(geometry, pose, result, Queryfilter, this)) 
+	{
+		ret = true;
+	}
+
+	return result.nbTouches;
 }
 
 void ControlledScene::__sweepBufferToPxRaycastHit(PxSweepBuffer& rayHit, PxRaycastHit* hitInfo)
@@ -622,9 +628,16 @@ PxQueryHitType::Enum ControlledScene::preFilter(
 		{
 			return PxQueryHitType::eBLOCK;
 		}
-		return PxQueryHitType::eTOUCH;
+		else
+		{
+			return PxQueryHitType::eTOUCH;
+		}
+
 	}
-	return PxQueryHitType::eNONE;
+	else
+	{
+		return PxQueryHitType::eNONE;
+	}
 }
 
 PxQueryHitType::Enum ControlledScene::postFilter(const PxFilterData& filterData, const PxQueryHit& hit)
