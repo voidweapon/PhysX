@@ -31,6 +31,9 @@ ELSE()
 	cmake_minimum_required(VERSION 3.11)
 ENDIF()
 
+SET(CMAKE_C_COMPILER "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/cc")
+SET(CMAKE_CXX_COMPILER "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/c++")
+
 project(PhysXSDK C CXX)
 
 OPTION(PX_BUILDSNIPPETS "Generate the snippets" OFF)
